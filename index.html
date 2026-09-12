@@ -15,8 +15,8 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
+            overflow-y: auto;
             cursor: pointer;
             user-select: none;
             text-align: center;
@@ -33,7 +33,7 @@
             position: absolute;
         }
 
-        /* Contenitore della poesia e della linea */
+        /* Contenitore della poesia e della prima linea */
         #container-poesia {
             opacity: 0;
             transition: opacity 1s ease;
@@ -44,7 +44,6 @@
             pointer-events: none;
         }
 
-        /* Stile della poesia */
         #poesia {
             font-size: 1.6rem;
             line-height: 1.6;
@@ -52,22 +51,52 @@
             margin-bottom: 25px;
         }
 
-        /* La linea che scompare lentamente */
+        /* Prima linea resa lenta anch'essa (es. 12 secondi) */
         #linea {
             width: 250px;
             height: 2px;
             background-color: #ffffff;
-            transition: width 5s linear, opacity 1s ease; 
+            transition: width 12s linear, opacity 1s ease; 
         }
 
-        /* Immagine finale nascosta */
+        /* Contenitore dell'immagine e della seconda linea lenta */
+        #container-immagine {
+            opacity: 0;
+            transition: opacity 1s ease;
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            pointer-events: none;
+        }
+
         #immagine-finale {
+            max-width: 80vw;
+            max-height: 60vh;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        /* Seconda linea lenta (es. 20 secondi) */
+        #linea-lenta {
+            width: 300px;
+            height: 2px;
+            background-color: #ffffff;
+            transition: width 20s linear, opacity 1s ease; 
+        }
+
+        /* Contenitore del testo finale lungo (360 parole) */
+        #testo-lungo {
             opacity: 0;
             transition: opacity 1.5s ease;
             position: absolute;
-            max-width: 80vw;
-            max-height: 70vh;
-            pointer-events: none;
+            max-width: 700px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            font-weight: 300;
+            text-align: left;
+            padding: 40px 20px;
+            pointer-events: auto;
         }
     </style>
 </head>
@@ -76,7 +105,7 @@
     <!-- La scritta iniziale -->
     <h1 id="titolo">404</h1>
 
-    <!-- La tua poesia e la linea raggruppate insieme -->
+    <!-- Fase 1: Poesia + Prima linea lenta -->
     <div id="container-poesia">
         <div id="poesia">
             C'è forse un dolce alla fine<br>
@@ -85,37 +114,66 @@
         <div id="linea"></div>
     </div>
 
-    <!-- Immagine finale corretta -->
-    <img id="immagine-finale" src="file_00000000266461f4871240ecb87d077a.png" alt="Sorpresa">
+    <!-- Fase 2: Immagine + Seconda linea lenta -->
+    <div id="container-immagine">
+        <img id="immagine-finale" src="file_00000000266461f4871240ecb87d077a.png" alt="Sorpresa">
+        <div id="linea-lenta"></div>
+    </div>
+
+    <!-- Fase 3: Il testo lungo finale -->
+    <div id="testo-lungo">
+        <p>16.03.2020. Souleymane, Souleymane, Souleymane: ripeto il tuo nome come fosse un rito magico, una benedizione, un’implorazione -folata in una stanza chiusa, con Sbarbaro.
+Lo ripeto ora che sono lontano, e il mio desiderio si mischia alla poesia: tacerti vicino già mi basta. Mi immagino tra le tue braccia: non sono più io, sono un giovane ragazzo dal futuro ancora roseo. Non sono più lui, sono le tue larghe mani che virili mi carezzano il viso, lo afferrano, lo fermano, mentre divento tuo. Mi rendi così orgoglioso, mi hai detto una volta, quando a letto urli che sei la mia puttana. Mi rendeva felice sentirti. Il mio desiderio soddisfatto ed espresso diventava sovrabbondante piacere per te. Pensavo che fosse tutto, tutto quel che avrei potuto desiderare. Ci sposeremo, scherzavi. Soldi! dico, atto involontario, perché la tua vita era anche questo: la vita di un borghese, che io non ho mai conosciuto -la classe media impoverita italiana si legge negli occhi di mia madre ed è arrivata ai mie. Ma era eccitazione e disagio, il tuo status di classe. Significava vedermi inferiore.  D’altronde, il tuo corpo snello, e alto -pronto ad irrobustirsi con i mesi, con la palestra che frequentavi con costanza nauseabonda-, il tuo grosso pene che poteva spavantare e per cui dovevo prepararmi ogni volta, prima di vederti, altrimenti non sarei riuscito ad accoglierlo, tutto ciò anche mi eccitava e diceva la mia inferiorità. Ero una donna, scherzo una volta, umiliandomi, poi Dio ha deciso di farmi uomo. Mi ricordo come lame autoinflitte queste parole, pronunciate sul letto della mia stanza in via P…., a T……. Steso accanto al tuo corpo, Non so come ci sono arrivato. So come hai deciso di partecipare. Poteva farlo meglio, rispondi, Hai spinto la lama più in fondo. Gli schizzi di sangue mi coprivano le labbra.
+Souleymane, Souleymane, Souleymane: facevi le mie mattine, con i tuoi regali parigini; riempivi la mia notte, con la tua voce paterna -ai tempi in cui credevo in un padre-, mi sorprendevi, con la tua vicinanza fraterna -ai tempi in cui osavo aprirmi ad un fratello-, mi folgoravi, con il tuo Chanel Eau de Parfume e l’odore della tua pelle.</p>
+    </div>
 
     <script>
         let audioCtx = null;
         let isPlaying = false;
+        let vinylGain = null;
 
         function startFireplace() {
             if (isPlaying) return;
+            isPlaying = true;
             
-            // 1. Fai sparire la scritta 404 e comparire la poesia col blocco
+            // 1. Sparisce 404 e appare la poesia con la prima linea (impostata a 12 secondi)
             document.getElementById('titolo').style.opacity = '0';
             const contPoesia = document.getElementById('container-poesia');
             contPoesia.style.opacity = '0.9';
 
-            // 2. Fai partire il rimpicciolimento della linea
             setTimeout(() => {
                 document.getElementById('linea').style.width = '0px';
             }, 100);
 
-            // 3. Dopo che la linea finisce (circa 5 secondi), sparisce la poesia e compare l'immagine
+            // 2. Dopo 12.1 secondi: sparisce la poesia e compare l'immagine con la seconda linea lenta (impostata a 20 secondi)
             setTimeout(() => {
                 contPoesia.style.opacity = '0';
+                const contImmagine = document.getElementById('container-immagine');
+                contImmagine.style.opacity = '0.9';
+
                 setTimeout(() => {
-                    document.getElementById('immagine-finale').style.opacity = '1';
-                }, 1000);
-            }, 5100);
+                    document.getElementById('linea-lenta').style.width = '0px';
+                }, 100);
+
+                // Attiviamo anche l'effetto "vinile sporco" in sottofondo mentre c'è l'immagine
+                if (vinylGain) {
+                    vinylGain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                }
+
+                // 3. Dopo altri 20.1 secondi (totale ~32.3s): sparisce l'immagine e compare il testo lungo
+                setTimeout(() => {
+                    contImmagine.style.opacity = '0';
+                    setTimeout(() => {
+                        document.getElementById('testo-lungo').style.opacity = '1';
+                    }, 1000);
+                }, 20100);
+
+            }, 12100);
 
             try {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 
+                // --- GENERATORE CAMINETTO ---
                 const bufferSize = 2 * audioCtx.sampleRate;
                 const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
                 const output = noiseBuffer.getChannelData(0);
@@ -139,6 +197,31 @@
                 gainNode.connect(audioCtx.destination);
                 whiteNoise.start();
 
+                // --- GENERATORE VINILE SPORCO (Crackle di fondo) ---
+                vinylGain = audioCtx.createGain();
+                vinylGain.gain.value = 0.0; // Parte silenzioso e si attiva alla fase 2
+
+                const vinylBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const vinylOutput = vinylBuffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    vinylOutput[i] = Math.random() * 2 - 1;
+                }
+
+                const vinylSource = audioCtx.createBufferSource();
+                vinylSource.buffer = vinylBuffer;
+                vinylSource.loop = true;
+
+                const vinylFilter = audioCtx.createBiquadFilter();
+                vinylFilter.type = 'bandpass';
+                vinylFilter.frequency.value = 1200; // Frequenza più sottile e graffiante tipica del vinile
+                vinylFilter.Q.value = 5;
+
+                vinylSource.connect(vinylFilter);
+                vinylFilter.connect(vinylGain);
+                vinylGain.connect(audioCtx.destination);
+                vinylSource.start();
+
+                // Scoppiettii del fuoco
                 function popCrackle() {
                     if (!isPlaying) return;
                     
@@ -173,7 +256,6 @@
                 }
 
                 popCrackle();
-                isPlaying = true;
 
             } catch (e) {
                 console.log("Audio non avviato", e);
