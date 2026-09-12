@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> 404 </title>
+    <title>404</title>
     <style>
         body {
             margin: 0;
@@ -21,29 +21,40 @@
             text-align: center;
         }
 
+        /* Stile della scritta iniziale SITO */
         h1 {
-            font-size: 1.8rem;
-            line-height: 1.6;
+            font-size: 3rem;
+            letter-spacing: 0.5rem;
             font-weight: 400;
             margin: 0;
             opacity: 0.9;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.5s ease;
+            position: absolute;
         }
 
-        body:active h1 {
-            opacity: 0.5;
+        /* Stile della poesia (inizialmente invisibile e nascosta) */
+        #poesia {
+            font-size: 1.6rem;
+            line-height: 1.6;
+            font-weight: 400;
+            margin: 0;
+            opacity: 0;
+            transition: opacity 1s ease;
+            position: absolute;
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
 
-    <h1>
-        È la mia Arte. Ve la rubo<br>
-        senza chiedere permesso,<br>
-        ho messo persino<br>
-        una grossa maiuscola<br>
-        in <strong>grassetto</strong>.
-    </h1>
+    <!-- La scritta iniziale -->
+    <h1 id="titolo">404</h1>
+
+    <!-- La tua poesia che comparirà dopo il clic -->
+    <div id="poesia">
+        C'è forse un dolce alla fine<br>
+       di questo insipido pasto?>.
+    </div>
 
     <script>
         let audioCtx = null;
@@ -52,6 +63,10 @@
         function startFireplace() {
             if (isPlaying) return;
             
+            // Fai sparire la scritta SITO e comparire la poesia
+            document.getElementById('titolo').style.opacity = '0';
+            document.getElementById('poesia').style.opacity = '0.9';
+
             try {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 
