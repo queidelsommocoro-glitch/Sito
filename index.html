@@ -148,10 +148,10 @@
         <p>Qui puoi inserire il tuo secondo testo. Quando avrai finito di leggerlo, la pagina si aprirà verso la fine...</p>
     </div>
 
-    <!-- Fase 5: Quadro finale (Böcklin) + Gnossienne No. 1 di Satie -->
+    <!-- Fase 5: Quadro finale (Böcklin) + Audio locale di Satie -->
     <div id="container-quadro">
-        <img id="quadro-finale" src="arnold_bc3b6cklin_il-bosco-sacro-1886.jpg" alt="Il bosco sacro - Arnold Böcklin">
-        <audio id="satie-audio" src="https://upload.wikimedia.org/wikipedia/commons/d/df/Erik_Satie_-_Gnossienne_No._1.ogg" loop></audio>
+        <img id="quadro-finale" src="arnold.jpg" alt="Il bosco sacro - Arnold Böcklin">
+        <audio id="satie-audio" src="Erik Satie - Gnossienne No.1.mp3" preload="auto" loop></audio>
     </div>
 
     <script>
@@ -205,13 +205,15 @@
                             playFinalSound();
 
                             setTimeout(() => {
-                                // Mostra il quadro di Böcklin
+                                // Mostra il quadro
                                 document.getElementById('container-quadro').style.opacity = '0.9';
                                 
-                                // Fa partire la musica della Gnossienne No. 1
+                                // Fa partire la musica locale
                                 const satieSong = document.getElementById('satie-audio');
                                 if (satieSong) {
-                                    satieSong.play().catch(err => console.log("Errore riproduzione audio Satie:", err));
+                                    satieSong.play().catch(err => {
+                                        console.log("Riproduzione audio bloccata o file non trovato:", err);
+                                    });
                                 }
                             }, 1000);
 
