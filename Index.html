@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SITO</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        h1 {
+            font-size: 3rem;
+            letter-spacing: 0.5rem;
+            font-weight: 400;
+            margin: 0;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+
+        body:active h1 {
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>SITO</h1>
+
+    <script>
+        let audioCtx = null;
+        let isPlaying = false;
+
+        function startFireplace() {
+            if (isPlaying) return;
+            
+            try {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // 1. Rumore di fondo (vento/fruscio caldo del fuoco) filtrato
+                const bufferSize = 2 * audioCtx.sampleRate;
+                const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const output = noiseBuffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    output[i] = Math.random() * 2 - 1;
+                }
+
+                const whiteNoise = audioCtx.createBufferSource();
+                whiteNoise.buffer = noiseBuffer;
+                whiteNoise.loop = true;
+
+                // Filtro passa-basso per rendere il suono cupo e ovattato (simile alla legna che brucia)
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.value = 400;
+
+                const gainNode = audioCtx.createGain();
+                gainNode.gain.value = 0.25;
+
+                whiteNoise.connect(filter);
+                filter.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                whiteNoise.start();
+
+                // 2. Generatore casuale di scoppiettii
+                function popCrackle() {
+                    if (!isPlaying) return;
+                    
+                    const delay = Math.random() * 400 + 50; // scoppi a intervalli casuali
+                    setTimeout(() => {
+                        if (!isPlaying) return;
+                        
+                        const popBuffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.05, audioCtx.sampleRate);
+                        const popData = popBuffer.getChannelData(0);
+                        for (let j = 0; j < popBuffer.length; j++) {
+                            popData[j] = (Math.random() * 2 - 1) * Math.exp(-j / (audioCtx.sampleRate * 0.01));
+                        }
+
+                        const popSource = audioCtx.createBufferSource();
+                        popSource.buffer = popBuffer;
+
+                        const popFilter = audioCtx.createBiquadFilter();
+                        popFilter.type = 'bandpass';
+                        popFilter.frequency.value = Math.random() * 2000 + 1000;
+                        popFilter.Q.value = 3;
+
+                        const popGain = audioCtx.createGain();
+                        popGain.gain.value = Math.random() * 0.4 + 0.1;
+
+                        popSource.connect(popFilter);
+                        popFilter.connect(popGain);
+                        popGain.connect(audioCtx.destination);
+                        
+                        popSource.start();
+                        popCrackle();
+                    }, delay);
+                }
+
+                popCrackle();
+                isPlaying = true;
+
+            } catch (e) {
+                console.log("Audio non avviato", e);
+            }
+        }
+
+        // Intercetta qualsiasi clic o tocco sulla pagina
+        document.addEventListener('click', () => {
+            if (!isPlaying) {
+                startFireplace();
+            }
+        }, { once: false });
+    </script>
+</body>
+</html>
