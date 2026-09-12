@@ -16,14 +16,12 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            /* Permette lo scorrimento verticale per leggere comodamente il testo lungo */
             overflow-y: auto; 
             cursor: pointer;
             user-select: none;
             text-align: center;
         }
 
-        /* Stile della scritta iniziale 404 */
         h1 {
             font-size: 3rem;
             letter-spacing: 0.5rem;
@@ -34,7 +32,6 @@
             position: absolute;
         }
 
-        /* Contenitore della poesia e della prima linea */
         #container-poesia {
             opacity: 0;
             transition: opacity 1s ease;
@@ -52,7 +49,6 @@
             margin-bottom: 25px;
         }
 
-        /* Prima linea lenta (es. 12 secondi) */
         #linea {
             width: 250px;
             height: 2px;
@@ -60,7 +56,6 @@
             transition: width 12s linear, opacity 1s ease; 
         }
 
-        /* Contenitore dell'immagine e della seconda linea lenta */
         #container-immagine {
             opacity: 0;
             transition: opacity 1s ease;
@@ -78,7 +73,6 @@
             margin-bottom: 20px;
         }
 
-        /* Seconda linea lenta (es. 20 secondi) */
         #linea-lenta {
             width: 300px;
             height: 2px;
@@ -86,11 +80,11 @@
             transition: width 20s linear, opacity 1s ease; 
         }
 
-        /* Contenitore del testo finale lungo (360 parole) - Ora scorrevole e posizionato correttamente */
-        #testo-lungo {
+        /* Contenitori per i testi lunghi */
+        #testo-lungo, #testo-secondario {
             opacity: 0;
             transition: opacity 1.5s ease;
-            position: relative; /* Permette alla pagina di allungarsi ed essere scrollata */
+            position: relative;
             max-width: 700px;
             width: 100%;
             font-size: 1.1rem;
@@ -100,6 +94,10 @@
             padding: 20px 0;
             pointer-events: auto;
             margin: auto;
+        }
+
+        #testo-secondario {
+            position: absolute; /* Si sovrappone nello stesso spazio quando compare */
         }
     </style>
 </head>
@@ -123,10 +121,14 @@
         <div id="linea-lenta"></div>
     </div>
 
-    <!-- Fase 3: Il testo lungo finale (360 parole) -->
+    <!-- Fase 3: Il primo testo lungo finale -->
     <div id="testo-lungo">
-        <p>L'adattamento dell'uomo comune, di buon senso ed equilibrato, comporta un rifiuto continuo e sistematico di molti aspetti interiori della natura umana, sia cognitivi che conativi. Adattarsi al mondo reale presuppone una divisione della persona, la quale volta le spalle a gran parte della propria interiorità perché la percepisce come pericolosa. Tuttavia, oggi sappiamo che, facendo così, si perde anche molto altro: queste stesse interiorità rappresentano infatti la fonte di ogni gioia, della capacità di amare, di giocare, di ridere e, aspetto per noi ancora più importante, di creare. Nel difendersi dall'inferno che custodisce dentro di sé, l'individuo finisce per separarsi anche dal cielo che vi abita. Nei casi estremi ci troviamo di fronte a una persona ossessionata, monotona, tesa, rigida, fredda, controllata, cauta, incapace di ridere, di giocare o di amare, così come di comportarsi con ingenuità, fiducia o spontaneità infantile. La sua immaginazione, le sue intuizioni, la sua delicatezza e la sua emotività tendono a essere represse o falsificate.(Maslow)</p>
-        <!-- Aggiungi qui i tuoi paragrafi con <p> ... </p> -->
+       <p>L'adattamento dell'uomo comune, di buon senso ed equilibrato, comporta un rifiuto continuo e sistematico di molti aspetti interiori della natura umana, sia cognitivi che conativi. Adattarsi al mondo reale presuppone una divisione della persona, la quale volta le spalle a gran parte della propria interiorità perché la percepisce come pericolosa. Tuttavia, oggi sappiamo che, facendo così, si perde anche molto altro: queste stesse interiorità rappresentano infatti la fonte di ogni gioia, della capacità di amare, di giocare, di ridere e, aspetto per noi ancora più importante, di creare. Nel difendersi dall'inferno che custodisce dentro di sé, l'individuo finisce per separarsi anche dal cielo che vi abita. Nei casi estremi ci troviamo di fronte a una persona ossessionata, monotona, tesa, rigida, fredda, controllata, cauta, incapace di ridere, di giocare o di amare, così come di comportarsi con ingenuità, fiducia o spontaneità infantile. La sua immaginazione, le sue intuizioni, la sua delicatezza e la sua emotività tendono a essere represse o falsificate.(Maslow)</p>
+    </div>
+
+    <!-- Fase 4: Il secondo testo che compare alla fine -->
+    <div id="testo-secondario">
+        <p>Hai gli occhi di tua madre, mi è stato detto. Non sapevo se apprezzare. Ho immaginato una lieve dolcezza, un'infinita disperazione.</p>
     </div>
 
     <script>
@@ -156,16 +158,26 @@
                     document.getElementById('linea-lenta').style.width = '0px';
                 }, 100);
 
-                // 3. Dopo altri 20.1 secondi: sparisce l'immagine e compare il testo lungo
+                // 3. Dopo altri 20.1 secondi: sparisce l'immagine e compare il primo testo lungo
                 setTimeout(() => {
                     contImmagine.style.opacity = '0';
-
-                    // TROCCOLINO EXTRA NEL FINALE: Un colpo secco/rumoretto elettronico o un pop speciale quando appare il testo
                     playFinalSound();
 
                     setTimeout(() => {
                         document.getElementById('testo-lungo').style.opacity = '1';
                     }, 1000);
+
+                    // --- NUOVA FASE: Dopo 15 secondi che si legge il primo testo, scompare e appare il secondo ---
+                    setTimeout(() => {
+                        document.getElementById('testo-lungo').style.opacity = '0';
+                        playFinalSound(); // Opzionale: riproduce un suono di transizione
+
+                        setTimeout(() => {
+                            document.getElementById('testo-secondario').style.opacity = '1';
+                        }, 1000);
+
+                    }, 15000); // 15000 millisecondi = 15 secondi di lettura per il primo testo
+
                 }, 20100);
 
             }, 12100);
@@ -173,7 +185,6 @@
             try {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 
-                // --- CAMINETTO PULITO (come all'inizio) ---
                 const bufferSize = 2 * audioCtx.sampleRate;
                 const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
                 const output = noiseBuffer.getChannelData(0);
@@ -197,10 +208,8 @@
                 gainNode.connect(audioCtx.destination);
                 whiteNoise.start();
 
-                // Scoppiettii normali del fuoco
                 function popCrackle() {
                     if (!isPlaying) return;
-                    
                     const delay = Math.random() * 400 + 50;
                     setTimeout(() => {
                         if (!isPlaying) return;
@@ -238,11 +247,9 @@
             }
         }
 
-        // Funzione per il rumoretto extra nel momento esatto in cui appare il testo finale
         function playFinalSound() {
             if (!audioCtx) return;
             try {
-                // Crea un piccolo suono sintetico suggestivo (un "thud" o un rintocco cupo)
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 
