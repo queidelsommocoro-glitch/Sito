@@ -7,7 +7,7 @@
     <style>
         body {
             margin: 0;
-            padding: 20px;
+            padding: 40px 20px;
             background-color: #000000;
             color: #ffffff;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -16,7 +16,8 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow-y: auto;
+            /* Permette lo scorrimento verticale per leggere comodamente il testo lungo */
+            overflow-y: auto; 
             cursor: pointer;
             user-select: none;
             text-align: center;
@@ -51,7 +52,7 @@
             margin-bottom: 25px;
         }
 
-        /* Prima linea resa lenta anch'essa (es. 12 secondi) */
+        /* Prima linea lenta (es. 12 secondi) */
         #linea {
             width: 250px;
             height: 2px;
@@ -85,18 +86,20 @@
             transition: width 20s linear, opacity 1s ease; 
         }
 
-        /* Contenitore del testo finale lungo (360 parole) */
+        /* Contenitore del testo finale lungo (360 parole) - Ora scorrevole e posizionato correttamente */
         #testo-lungo {
             opacity: 0;
             transition: opacity 1.5s ease;
-            position: absolute;
+            position: relative; /* Permette alla pagina di allungarsi ed essere scrollata */
             max-width: 700px;
+            width: 100%;
             font-size: 1.1rem;
             line-height: 1.8;
             font-weight: 300;
             text-align: left;
-            padding: 40px 20px;
+            padding: 20px 0;
             pointer-events: auto;
+            margin: auto;
         }
     </style>
 </head>
@@ -120,23 +123,21 @@
         <div id="linea-lenta"></div>
     </div>
 
-    <!-- Fase 3: Il testo lungo finale -->
+    <!-- Fase 3: Il testo lungo finale (360 parole) -->
     <div id="testo-lungo">
-        <p>16.03.2020. Souleymane, Souleymane, Souleymane: ripeto il tuo nome come fosse un rito magico, una benedizione, un’implorazione -folata in una stanza chiusa, con Sbarbaro.
-Lo ripeto ora che sono lontano, e il mio desiderio si mischia alla poesia: tacerti vicino già mi basta. Mi immagino tra le tue braccia: non sono più io, sono un giovane ragazzo dal futuro ancora roseo. Non sono più lui, sono le tue larghe mani che virili mi carezzano il viso, lo afferrano, lo fermano, mentre divento tuo. Mi rendi così orgoglioso, mi hai detto una volta, quando a letto urli che sei la mia puttana. Mi rendeva felice sentirti. Il mio desiderio soddisfatto ed espresso diventava sovrabbondante piacere per te. Pensavo che fosse tutto, tutto quel che avrei potuto desiderare. Ci sposeremo, scherzavi. Soldi! dico, atto involontario, perché la tua vita era anche questo: la vita di un borghese, che io non ho mai conosciuto -la classe media impoverita italiana si legge negli occhi di mia madre ed è arrivata ai mie. Ma era eccitazione e disagio, il tuo status di classe. Significava vedermi inferiore.  D’altronde, il tuo corpo snello, e alto -pronto ad irrobustirsi con i mesi, con la palestra che frequentavi con costanza nauseabonda-, il tuo grosso pene che poteva spavantare e per cui dovevo prepararmi ogni volta, prima di vederti, altrimenti non sarei riuscito ad accoglierlo, tutto ciò anche mi eccitava e diceva la mia inferiorità. Ero una donna, scherzo una volta, umiliandomi, poi Dio ha deciso di farmi uomo. Mi ricordo come lame autoinflitte queste parole, pronunciate sul letto della mia stanza in via P…., a T……. Steso accanto al tuo corpo, Non so come ci sono arrivato. So come hai deciso di partecipare. Poteva farlo meglio, rispondi, Hai spinto la lama più in fondo. Gli schizzi di sangue mi coprivano le labbra.
-Souleymane, Souleymane, Souleymane: facevi le mie mattine, con i tuoi regali parigini; riempivi la mia notte, con la tua voce paterna -ai tempi in cui credevo in un padre-, mi sorprendevi, con la tua vicinanza fraterna -ai tempi in cui osavo aprirmi ad un fratello-, mi folgoravi, con il tuo Chanel Eau de Parfume e l’odore della tua pelle.</p>
+        <p>Qui puoi incollare tutto il tuo testo lungo. Adesso la pagina scorrerà dolcemente in basso permettendo di leggerlo tutto senza che venga tagliato o nascosto dai bordi dello schermo...</p>
+        <!-- Aggiungi qui i tuoi paragrafi con <p> ... </p> -->
     </div>
 
     <script>
         let audioCtx = null;
         let isPlaying = false;
-        let vinylGain = null;
 
         function startFireplace() {
             if (isPlaying) return;
             isPlaying = true;
             
-            // 1. Sparisce 404 e appare la poesia con la prima linea (impostata a 12 secondi)
+            // 1. Sparisce 404 e appare la poesia con la prima linea (12 secondi)
             document.getElementById('titolo').style.opacity = '0';
             const contPoesia = document.getElementById('container-poesia');
             contPoesia.style.opacity = '0.9';
@@ -145,7 +146,7 @@ Souleymane, Souleymane, Souleymane: facevi le mie mattine, con i tuoi regali par
                 document.getElementById('linea').style.width = '0px';
             }, 100);
 
-            // 2. Dopo 12.1 secondi: sparisce la poesia e compare l'immagine con la seconda linea lenta (impostata a 20 secondi)
+            // 2. Dopo 12.1 secondi: sparisce la poesia e compare l'immagine con la seconda linea (20 secondi)
             setTimeout(() => {
                 contPoesia.style.opacity = '0';
                 const contImmagine = document.getElementById('container-immagine');
@@ -155,14 +156,13 @@ Souleymane, Souleymane, Souleymane: facevi le mie mattine, con i tuoi regali par
                     document.getElementById('linea-lenta').style.width = '0px';
                 }, 100);
 
-                // Attiviamo anche l'effetto "vinile sporco" in sottofondo mentre c'è l'immagine
-                if (vinylGain) {
-                    vinylGain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                }
-
-                // 3. Dopo altri 20.1 secondi (totale ~32.3s): sparisce l'immagine e compare il testo lungo
+                // 3. Dopo altri 20.1 secondi: sparisce l'immagine e compare il testo lungo
                 setTimeout(() => {
                     contImmagine.style.opacity = '0';
+
+                    // TROCCOLINO EXTRA NEL FINALE: Un colpo secco/rumoretto elettronico o un pop speciale quando appare il testo
+                    playFinalSound();
+
                     setTimeout(() => {
                         document.getElementById('testo-lungo').style.opacity = '1';
                     }, 1000);
@@ -173,7 +173,7 @@ Souleymane, Souleymane, Souleymane: facevi le mie mattine, con i tuoi regali par
             try {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 
-                // --- GENERATORE CAMINETTO ---
+                // --- CAMINETTO PULITO (come all'inizio) ---
                 const bufferSize = 2 * audioCtx.sampleRate;
                 const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
                 const output = noiseBuffer.getChannelData(0);
@@ -197,31 +197,7 @@ Souleymane, Souleymane, Souleymane: facevi le mie mattine, con i tuoi regali par
                 gainNode.connect(audioCtx.destination);
                 whiteNoise.start();
 
-                // --- GENERATORE VINILE SPORCO (Crackle di fondo) ---
-                vinylGain = audioCtx.createGain();
-                vinylGain.gain.value = 0.0; // Parte silenzioso e si attiva alla fase 2
-
-                const vinylBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-                const vinylOutput = vinylBuffer.getChannelData(0);
-                for (let i = 0; i < bufferSize; i++) {
-                    vinylOutput[i] = Math.random() * 2 - 1;
-                }
-
-                const vinylSource = audioCtx.createBufferSource();
-                vinylSource.buffer = vinylBuffer;
-                vinylSource.loop = true;
-
-                const vinylFilter = audioCtx.createBiquadFilter();
-                vinylFilter.type = 'bandpass';
-                vinylFilter.frequency.value = 1200; // Frequenza più sottile e graffiante tipica del vinile
-                vinylFilter.Q.value = 5;
-
-                vinylSource.connect(vinylFilter);
-                vinylFilter.connect(vinylGain);
-                vinylGain.connect(audioCtx.destination);
-                vinylSource.start();
-
-                // Scoppiettii del fuoco
+                // Scoppiettii normali del fuoco
                 function popCrackle() {
                     if (!isPlaying) return;
                     
@@ -259,6 +235,31 @@ Souleymane, Souleymane, Souleymane: facevi le mie mattine, con i tuoi regali par
 
             } catch (e) {
                 console.log("Audio non avviato", e);
+            }
+        }
+
+        // Funzione per il rumoretto extra nel momento esatto in cui appare il testo finale
+        function playFinalSound() {
+            if (!audioCtx) return;
+            try {
+                // Crea un piccolo suono sintetico suggestivo (un "thud" o un rintocco cupo)
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.8);
+
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.8);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.8);
+            } catch (e) {
+                console.log("Audio extra non partito", e);
             }
         }
 
