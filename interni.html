@@ -188,12 +188,11 @@
 
     </div>
 
-    <script>
+  <script>
         const indicatoreAudio = document.getElementById('btn-audio');
         let audioAvviato = false;
 
-        // Generatore sintetico del caminetto tramite Web Audio API (nessun file esterno richiesto)
-        function avviaCaminetto() {
+        function avviaFuoco() {
             if (audioAvviato) return;
             
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -201,7 +200,7 @@
                 audioCtx.resume();
             }
 
-            // 1. Creazione del rumore bianco di fondo (il fruscio della legna / aria calda)
+            // 1. Fruscio di fondo continuo della brace (rumore bianco filtrato basso)
             const bufferSize = 2 * audioCtx.sampleRate;
             const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
             const output = noiseBuffer.getChannelData(0);
@@ -213,54 +212,56 @@
             whiteNoise.buffer = noiseBuffer;
             whiteNoise.loop = true;
 
-            // Filtro passa-basso per rendere il fruscio caldo e cupo, simile al fuoco
             const filter = audioCtx.createBiquadFilter();
             filter.type = 'lowpass';
-            filter.frequency.value = 600;
+            filter.frequency.value = 220;
 
             const gainNode = audioCtx.createGain();
-            gainNode.gain.value = 0.15; // Volume calibrato e rilassante
+            gainNode.gain.value = 0.12;
 
             whiteNoise.connect(filter);
             filter.connect(gainNode);
             gainNode.connect(audioCtx.destination);
             whiteNoise.start();
 
-            // 2. Generatore casuale di scoppiettii (crackles)
-            function scoppioCasuale() {
+            // 2. Sistema di scoppiettii casuali ("pop" / "pap") della legna
+            function generaScoppio() {
                 if (!audioAvviato) return;
-                
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                
-                // Frequenze casuali acute per simulare la legna che scoppietta
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(80 + Math.random() * 400, audioCtx.currentTime);
-                
-                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
-                
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.05);
 
-                // Pianifica il prossimo scoppio a intervalli casuali
-                const prossimoScoppio = Math.random() * 800 + 100;
-                setTimeout(scoppioCasuale, prossimoScoppio);
+                const osc = audioCtx.createOscillator();
+                const gainScoppio = audioCtx.createGain();
+
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(40 + Math.random() * 120, audioCtx.currentTime);
+
+                gainScoppio.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gainScoppio.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.03);
+
+                osc.connect(gainScoppio);
+                gainScoppio.connect(audioCtx.destination);
+
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.03);
+
+                const prossimoScoppio = Math.random() * 1300 + 200;
+                setTimeout(generaScoppio, prossimoScoppio);
             }
 
-            setTimeout(scoppioCasuale, 500);
+            setTimeout(generaScoppio, 400);
 
             audioAvviato = true;
-            indicatoreAudio.innerText = "♪ CAMINETTO: ON";
+            indicatoreAudio.innerText = "♪ FUOCO: ON";
         }
 
-        // Si attiva al primo click ovunque nella pagina (per rispettare le regole dei browser)
-        document.addEventListener('click', () => {
-            avviaCaminetto();
+        // Tenta l'avvio immediato al caricamento della pagina
+        window.addEventListener('DOMContentLoaded', () => {
+            avviaFuoco();
         });
+
+        // Di riserva: se il browser blocca l'autoplay, parte al primo tocco ovunque
+        document.addEventListener('click', () => {
+            avviaFuoco();
+        }, { once: true });
     </script>
 </body>
 </html>
