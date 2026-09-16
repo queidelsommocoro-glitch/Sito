@@ -122,7 +122,7 @@
             100% { transform: translateY(110vh); opacity: 0; }
         }
 
-        /* --- STILE DEL NUOVO BLOG (SCHERMATA FINALE) --- */
+        /* --- STILE DEL BLOG (SCHERMATA FINALE) --- */
         #blog-container {
             display: none;
             opacity: 0;
@@ -261,11 +261,9 @@
         let faseImmagineAttiva = false;
         let faseTestoRaggiunta = false;
         let clickPioggiaCount = 0;
-        let currentMode = 'fireplace';
 
-        // Variabili per memorizzare i timeout così da poterli cancellare in caso di clic anticipato
-        let timerPoesia1, timerPoesia2;
-        let timerImmagine1, timerImmagine2;
+        let timerPoesia1;
+        let timerImmagine1;
 
         const fraseTesto = '"Hai gli occhi di tua madre", mi è stato detto. Non sapevo se apprezzare. Ho percepito una lieve dolcezza, un\'infinita disperazione.';
 
@@ -278,7 +276,7 @@
 
             try {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                startFireplaceAudio();
+                startAmbianceAudio();
             } catch (e) {
                 console.log("Audio non avviato", e);
             }
@@ -292,17 +290,15 @@
             contPoesia.style.opacity = '0.9';
             setTimeout(() => { document.getElementById('linea').style.width = '0px'; }, 100);
 
-            // Dopo 12.1 secondi passa in automatico all'immagine
             timerPoesia1 = setTimeout(() => {
                 passaImmagine();
             }, 12100);
         }
 
         function passaImmagine() {
-            if (!fasePoesiaAttiva) return; // Evita doppi richiami
+            if (!fasePoesiaAttiva) return; 
             fasePoesiaAttiva = false;
             
-            // Cancella i timer della poesia se l'utente ha cliccato prima della fine
             clearTimeout(timerPoesia1);
 
             const contPoesia = document.getElementById('container-poesia');
@@ -313,17 +309,15 @@
             contImmagine.style.opacity = '0.9';
             setTimeout(() => { document.getElementById('linea-lenta').style.width = '0px'; }, 100);
 
-            // Dopo 20.1 secondi passa in automatico al testo lungo
             timerImmagine1 = setTimeout(() => {
                 passaTestoLungo();
             }, 20100);
         }
 
         function passaTestoLungo() {
-            if (!faseImmagineAttiva) return; // Evita doppi richiami
+            if (!faseImmagineAttiva) return; 
             faseImmagineAttiva = false;
 
-            // Cancella i timer dell'immagine se l'utente ha cliccato prima della fine
             clearTimeout(timerImmagine1);
 
             const contImmagine = document.getElementById('container-immagine');
@@ -336,40 +330,53 @@
             }, 1000);
         }
 
-        // --- AUDIO CAMINETTO ---
+        // --- AUDIO CAMINETTO + VINILE ---
         let whiteNoiseSource = null;
-        let gainNodeFire = null;
+        let gainNodeAmbiance = null;
 
-        function startFireplaceAudio() {
+        function startAmbianceAudio() {
             const bufferSize = 2 * audioCtx.sampleRate;
             const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
             const output = noiseBuffer.getChannelData(0);
             for (let i = 0; i < bufferSize; i++) { output[i] = Math.random() * 2 - 1; }
 
+            // 1. Canale Caminetto (Bassi ovattati)
             whiteNoiseSource = audioCtx.createBufferSource();
             whiteNoiseSource.buffer = noiseBuffer;
             whiteNoiseSource.loop = true;
 
-            const filter = audioCtx.createBiquadFilter();
-            filter.type = 'lowpass';
-            filter.frequency.value = 400;
+            const filterFire = audioCtx.createBiquadFilter();
+            filterFire.type = 'lowpass';
+            filterFire.frequency.value = 400;
 
-            gainNodeFire = audioCtx.createGain();
-            gainNodeFire.gain.value = 0.25;
+            // 2. Canale Fruscio Vinile (Alti delicati)
+            const filterVinyl = audioCtx.createBiquadFilter();
+            filterVinyl.type = 'bandpass';
+            filterVinyl.frequency.value = 2500;
+            filterVinyl.Q.value = 1;
 
-            whiteNoiseSource.connect(filter);
-            filter.connect(gainNodeFire);
-            gainNodeFire.connect(audioCtx.destination);
+            gainNodeAmbiance = audioCtx.createGain();
+            gainNodeAmbiance.gain.value = 0.25;
+
+            whiteNoiseSource.connect(filterFire);
+            whiteNoiseSource.connect(filterVinyl);
+
+            filterFire.connect(gainNodeAmbiance);
+            filterVinyl.connect(gainNodeAmbiance);
+            
+            gainNodeAmbiance.connect(audioCtx.destination);
             whiteNoiseSource.start();
 
             popCrackle();
+            vinylTick();
         }
 
+        // Scoppiettii della legna del caminetto
         function popCrackle() {
-            if (!isPlaying || currentMode !== 'fireplace') return;
+            if (!isPlaying) return;
             const delay = Math.random() * 400 + 50;
             setTimeout(() => {
-                if (!isPlaying || currentMode !== 'fireplace') return;
+                if (!isPlaying) return;
                 
                 const popBuffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.05, audioCtx.sampleRate);
                 const popData = popBuffer.getChannelData(0);
@@ -386,7 +393,7 @@
                 popFilter.Q.value = 3;
 
                 const popGain = audioCtx.createGain();
-                popGain.gain.value = Math.random() * 0.4 + 0.1;
+                popGain.gain.value = Math.random() * 0.3 + 0.1;
 
                 popSource.connect(popFilter);
                 popFilter.connect(popGain);
@@ -397,45 +404,36 @@
             }, delay);
         }
 
-        // --- AUDIO GOCCE D'ACQUA NEI VASI ---
-        function startWaterDropsAudio() {
-            currentMode = 'water';
-            if (gainNodeFire) {
-                gainNodeFire.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.5);
-                setTimeout(() => { if (whiteNoiseSource) whiteNoiseSource.stop(); }, 1500);
-            }
-
-            function loopDrop() {
+        // Ticchettii leggeri della polvere sul vinile
+        function vinylTick() {
+            if (!isPlaying) return;
+            const delay = Math.random() * 200 + 30;
+            setTimeout(() => {
                 if (!isPlaying) return;
-                playWaterDrop();
-                const nextTime = Math.random() * 1500 + 800;
-                setTimeout(loopDrop, nextTime);
-            }
-            loopDrop();
-        }
-
-        function playWaterDrop() {
-            if (!audioCtx) return;
-            try {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
                 
-                osc.type = 'sine';
-                let startFreq = Math.random() * 400 + 800; 
-                osc.frequency.setValueAtTime(startFreq, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(startFreq - 300, audioCtx.currentTime + 0.15);
+                const tickBuffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.01, audioCtx.sampleRate);
+                const tickData = tickBuffer.getChannelData(0);
+                for (let j = 0; j < tickBuffer.length; j++) {
+                    tickData[j] = (Math.random() * 2 - 1) * Math.exp(-j / (audioCtx.sampleRate * 0.002));
+                }
 
-                gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
+                const tickSource = audioCtx.createBufferSource();
+                tickSource.buffer = tickBuffer;
 
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
+                const tickFilter = audioCtx.createBiquadFilter();
+                tickFilter.type = 'highpass';
+                tickFilter.frequency.value = 3500;
 
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.35);
-            } catch (e) {
-                console.log("Errore audio goccia", e);
-            }
+                const tickGain = audioCtx.createGain();
+                tickGain.gain.value = Math.random() * 0.06 + 0.01; // Molto sottile
+
+                tickSource.connect(tickFilter);
+                tickFilter.connect(tickGain);
+                tickGain.connect(audioCtx.destination);
+                
+                tickSource.start();
+                vinylTick();
+            }, delay);
         }
 
         function playFinalSound() {
@@ -484,7 +482,12 @@
 
             if (clickPioggiaCount >= 6) {
                 faseTestoRaggiunta = false; 
-                startWaterDropsAudio(); 
+
+                // Sfuma dolcemente l'audio combinato alla fine
+                if (gainNodeAmbiance) {
+                    gainNodeAmbiance.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.5);
+                    setTimeout(() => { if (whiteNoiseSource) whiteNoiseSource.stop(); isPlaying = false; }, 1500);
+                }
 
                 setTimeout(() => {
                     document.getElementById('testo-lungo').style.opacity = '0';
@@ -505,11 +508,11 @@
             if (!isPlaying) {
                 startFireplace();
             } else if (fasePoesiaAttiva) {
-                passaImmagine(); // Cliccando durante la poesia, si passa subito all'immagine
+                passaImmagine(); 
             } else if (faseImmagineAttiva) {
-                passaTestoLungo(); // Cliccando durante l'immagine, si passa subito al testo lungo
+                passaTestoLungo(); 
             } else if (faseTestoRaggiunta) {
-                generaPioggiaDiFrasi(); // Cliccando durante il testo lungo, parte la pioggia
+                generaPioggiaDiFrasi(); 
             }
         }, { once: false });
     </script>
