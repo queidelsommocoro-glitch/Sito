@@ -220,31 +220,31 @@
     </div>
 
     <div id="testo-lungo">
-        <p>L'adattamento dell'uomo comune, di buon senso ed equilibrato, comporta un rifiuto continuo e sistematico di molti aspetti interiori della natura umana, sia cognitivi che conativi. Adattarsi al mondo reale presuppone una divisione della persona, la quale volta le spalle a gran parte della propria interiorità perché la percepisce come pericolosa. Tuttavia, oggi sappiamo che, facendo così, si perde anche molto altro: queste stesse interiorità rappresentano infatti la fonte di ogni gioia, della capacità di amare, di giocare, di ridere e, aspetto per noi ancora più importante, di creare. Nel difendersi dall'inferno che custodisce dentro di sé, l'individuo finisce per separarsi anche dal cielo che vi abita. Nei casi estremi ci troviamo di fronte a una persona ossessionata, monotona, tesa, rigida, fredda, controllata, cauta, incapace di ridere, di giocare o di amare, così come di comportarsi con ingenuità, fiducia o spontaneità infantile. La sua immaginazione, le sue intuizioni, la sua delicatezza e la sua emotività tendono a essere represse o falsificate.(Maslow)</p>
+        <p>L'adattamento dell'uomo comune, di buon senso ed equilibrato, comporta un rifiuto continuo e sistematico di molti aspetti interiori della natura umana, sia cognitivi che conativi. Adattarsi al mondo reale presuppone una divisione della persona, la quale volta le spalle a gran parte della propria interiorità perché la percepisce come pericolosa. Tuttavia, oggi sappiamo che, facendo così, si perde anche molto altro: queste stesse interiorità rappresentano infatti la fonte di ogni gioia, della capacità di amare, di giocare, di ridere e, aspetto per noi ancora più importante, di creare. Nel difendersi dall'inferno che custodisce dentro di sé, l'individuo finisce per separarsi anche dal cielo che vi abita. Nei casi estremi ci troviamo di fronte a una persona ossessionata, monotona, tesa, rigida, fredda, controllata, cauta, incapace di ridere, di giocare o di amare, così come di comportarsi con ingenuità, fiducia o spontaneità infantile. La sua immaginazione, le sue intuizioni, la sua delicatezza e la sua emotività tendono a essere represse o falsificate. (Maslow)</p>
     </div>
 
-    <!-- Schermata Finale: Il Blog con i percorsi -->
+    <!-- Schermata Finale: Il Blog con i collegamenti ai file separati -->
     <div id="blog-container">
         <div class="blog-header">
             <h2>L'ARCHIVIO</h2>
             <p>Scegli un percorso per esplorare i frammenti.</p>
         </div>
         <div class="grid-percorsi">
-            <a href="#" class="card-percorso" onclick="alert('Accesso al Percorso: Interni'); return false;">
+            <a href="interni.html" class="card-percorso">
                 <div>
                     <h3>Interni & Silenzi</h3>
                     <p>Riflessioni sulla solitudine, la frammentazione dell'io e gli spazi nascosti della mente.</p>
                 </div>
                 <span class="card-tag">4 Articoli</span>
             </a>
-            <a href="#" class="card-percorso" onclick="alert('Accesso al Percorso: Memorie'); return false;">
+            <a href="memorie.html" class="card-percorso">
                 <div>
                     <h3>Memorie Liquide</h3>
                     <p>Racconti, echi familiari, eredità emotive e lo specchio di ciò che siamo stati.</p>
                 </div>
                 <span class="card-tag">6 Articoli</span>
             </a>
-            <a href="#" class="card-percorso" onclick="alert('Accesso al Percorso: Oltre'); return false;">
+            <a href="oltre.html" class="card-percorso">
                 <div>
                     <h3>Oltre la Soglia</h3>
                     <p>Errori di sistema, transizioni digitali e varchi verso dimensioni alternative.</p>
@@ -425,7 +425,7 @@
                 tickFilter.frequency.value = 3500;
 
                 const tickGain = audioCtx.createGain();
-                tickGain.gain.value = Math.random() * 0.06 + 0.01; // Molto sottile
+                tickGain.gain.value = Math.random() * 0.06 + 0.01;
 
                 tickSource.connect(tickFilter);
                 tickFilter.connect(tickGain);
@@ -483,7 +483,6 @@
             if (clickPioggiaCount >= 6) {
                 faseTestoRaggiunta = false; 
 
-                // Sfuma dolcemente l'audio combinato alla fine
                 if (gainNodeAmbiance) {
                     gainNodeAmbiance.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.5);
                     setTimeout(() => { if (whiteNoiseSource) whiteNoiseSource.stop(); isPlaying = false; }, 1500);
