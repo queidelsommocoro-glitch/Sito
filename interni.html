@@ -3,494 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 - Archivio</title>
+    <title>Interni - Archivio</title>
     <style>
         body {
             margin: 0;
-            padding: 40px 20px;
+            padding: 60px 20px;
             background-color: #000000;
             color: #ffffff;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow-y: auto; 
-            cursor: pointer;
-            user-select: none;
-            text-align: center;
+            overflow-y: auto;
+            text-align: left;
             position: relative;
-            overflow-x: hidden;
-            transition: background-color 2s ease;
         }
 
-        /* Stile della scritta iniziale 404 */
-        h1 {
-            font-size: 3rem;
-            letter-spacing: 0.5rem;
-            font-weight: 400;
-            margin: 0;
-            opacity: 0.9;
-            transition: opacity 0.5s ease;
-            position: absolute;
+        /* Pulsante per tornare indietro */
+        .torna-indietro {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            color: #888;
+            text-decoration: none;
+            font-size: 0.9rem;
+            letter-spacing: 0.1rem;
+            transition: color 0.3s ease;
+            z-index: 10;
         }
 
-        /* Contenitore della poesia e della prima linea */
-        #container-poesia {
-            opacity: 0;
-            transition: opacity 1s ease;
-            position: absolute;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            pointer-events: none;
+        .torna-indietro:hover {
+            color: #fff;
         }
 
-        #poesia {
-            font-size: 1.6rem;
-            line-height: 1.6;
-            font-weight: 400;
-            margin-bottom: 25px;
-        }
-
-        #linea {
-            width: 250px;
-            height: 2px;
-            background-color: #ffffff;
-            transition: width 12s linear, opacity 1s ease; 
-        }
-
-        /* Contenitore dell'immagine e della seconda linea lenta */
-        #container-immagine {
-            opacity: 0;
-            transition: opacity 1s ease;
-            position: absolute;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            pointer-events: none;
-        }
-
-        #immagine-finale {
-            max-width: 80vw;
-            max-height: 60vh;
+        /* Pulsante per controllare la musica in alto a destra */
+        .controllo-audio {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #aaa;
+            padding: 8px 14px;
             border-radius: 4px;
-            margin-bottom: 20px;
+            font-size: 0.8rem;
+            letter-spacing: 0.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
         }
 
-        #linea-lenta {
-            width: 300px;
-            height: 2px;
-            background-color: #ffffff;
-            transition: width 20s linear, opacity 1s ease; 
+        .controllo-audio:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.4);
         }
 
-        /* Contenitore del testo finale lungo */
-        #testo-lungo {
-            opacity: 0;
-            transition: opacity 1.5s ease;
-            position: relative;
+        /* Contenitore principale dell'articolo */
+        .articolo-container {
             max-width: 700px;
             width: 100%;
+            margin-top: 40px;
+            opacity: 0;
+            animation: fadeIn 1.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .articolo-header {
+            margin-bottom: 50px;
+            text-align: center;
+        }
+
+        .articolo-tag {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2rem;
+            color: #666;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .articolo-header h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 0.05rem;
+            margin: 0 0 15px 0;
+        }
+
+        .articolo-data {
+            color: #777;
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        /* Testo e paragrafi dell'articolo */
+        .articolo-contenuto p {
             font-size: 1.1rem;
             line-height: 1.8;
             font-weight: 300;
-            text-align: left;
-            padding: 20px 0;
-            pointer-events: auto;
-            margin: auto;
+            color: #ddd;
+            margin-bottom: 30px;
         }
 
-        /* Frasi a pioggia */
-        .frase-pioggia {
-            position: fixed;
-            top: -50px;
-            color: rgba(255, 255, 255, 0.85);
-            font-size: 1.2rem;
-            font-style: italic;
-            pointer-events: none;
-            white-space: nowrap;
-            z-index: 999;
-            animation: caduta linear forwards;
-        }
-
-        @keyframes caduta {
-            0% { transform: translateY(0); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(110vh); opacity: 0; }
-        }
-
-        /* --- STILE DEL BLOG (SCHERMATA FINALE) --- */
-        #blog-container {
-            display: none;
-            opacity: 0;
-            transition: opacity 2s ease;
-            max-width: 1000px;
-            width: 100%;
-            margin: auto;
-            padding: 40px 20px;
-            text-align: left;
-            pointer-events: auto;
-            cursor: default;
-        }
-
-        .blog-header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-
-        .blog-header h2 {
-            font-size: 2.2rem;
-            font-weight: 300;
-            letter-spacing: 0.2rem;
-            margin-bottom: 10px;
-        }
-
-        .blog-header p {
-            color: #888;
-            font-size: 1rem;
-        }
-
-        .grid-percorsi {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-        }
-
-        .card-percorso {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            padding: 30px;
-            transition: all 0.4s ease;
-            cursor: pointer;
-            text-decoration: none;
-            color: inherit;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .card-percorso:hover {
-            background: rgba(255, 255, 255, 0.07);
-            border-color: rgba(255, 255, 255, 0.3);
-            transform: translateY(-5px);
-        }
-
-        .card-percorso h3 {
-            font-size: 1.3rem;
+        .articolo-contenuto h3 {
+            font-size: 1.4rem;
             font-weight: 400;
-            margin-top: 0;
-            margin-bottom: 15px;
-            letter-spacing: 0.05rem;
+            margin: 40px 0 20px 0;
+            color: #fff;
         }
 
-        .card-percorso p {
+        /* Immagine opzionale all'interno dell'articolo */
+        .articolo-immagine {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin: 40px 0;
+            opacity: 0.9;
+        }
+
+        /* Linea divisoria elegante */
+        .separatore {
+            width: 100px;
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.2);
+            margin: 60px auto;
+        }
+
+        /* Footer dell'articolo */
+        .articolo-footer {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .articolo-footer a {
             color: #aaa;
+            text-decoration: none;
             font-size: 0.95rem;
-            line-height: 1.5;
-            margin-bottom: 20px;
+            border-bottom: 1.5px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 2px;
+            transition: all 0.3s ease;
         }
 
-        .card-tag {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1rem;
-            color: #666;
+        .articolo-footer a:hover {
+            color: #fff;
+            border-color: #fff;
         }
     </style>
 </head>
 <body>
 
-    <h1 id="titolo">404</h1>
+    <!-- Link per tornare alla home / archivio -->
+    <a href="index.html" class="torna-indietro">← Torna all'Archivio</a>
 
-    <div id="container-poesia">
-        <div id="poesia">
-            C'è forse un dolce alla fine<br>
-            di questo insipido pasto?
+    <!-- Pulsante per gestire la musica della stanza -->
+    <button id="btn-audio" class="controllo-audio" onclick="toggleMusica()">♪ MUSICA: OFF</button>
+
+    <!-- File audio di Sébastien Schuller -->
+    <audio id="audio-stanza" src="Sébastien Schuller - Weeping Willow (1).mp3" loop></audio>
+
+    <div class="articolo-container">
+        
+        <header class="articolo-header">
+            <span class="articolo-tag">Interni</span>
+            <h1>Stanza gotica</h1>
+            <span class="articolo-data">a volta alta ed angusta.</span>
+        </header>
+
+        <div class="articolo-contenuto">
+            <p>Esiste un momento esatto in cui il rumore del mondo fuori si interrompe, non perché sia cessato davvero, ma perché la soglia della nostra attenzione si è ritratta, lasciando spazio a un eco sordo e immobile.</p>
+            
+            <p>In quegli spazi interiori che spesso evitiamo di abitare, la mente non cerca risposte; si limita a contemplare i bordi delle cose che siamo stati costretti a dimenticare per poter funzionare là fuori.</p>
+
+            <!-- Se vuoi aggiungere un'immagine, inserisci il nome del file qui sotto -->
+            <!-- <img src="tua-immagine.jpg" alt="Dettaglio" class="articolo-immagine"> -->
+
+            <h3>Il peso dell'assenza</h3>
+            
+            <p>Ci insegnano a colmare ogni vuoto con la misura, con la retta via del buon senso, con l'equilibrio rassicurante di chi sa sempre cosa dire. Ma cosa rimane di autentico quando il prezzo di quell'equilibrio è l'estinzione della nostra voce più intima?</p>
+            
+            <p>Rimanere in ascolto, anche quando fa paura, è l'unico modo per non diventare estranei a se stessi.</p>
         </div>
-        <div id="linea"></div>
-    </div>
 
-    <div id="container-immagine">
-        <img id="immagine-finale" src="file_00000000266461f4871240ecb87d077a.png" alt="Sorpresa">
-        <div id="linea-lenta"></div>
-    </div>
+        <div class="separatore"></div>
 
-    <div id="testo-lungo">
-        <p>L'adattamento dell'uomo comune, di buon senso ed equilibrato, comporta un rifiuto continuo e sistematico di molti aspetti interiori della natura umana, sia cognitivi che conativi. Adattarsi al mondo reale presuppone una divisione della persona, la quale volta le spalle a gran parte della propria interiorità perché la percepisce come pericolosa. Tuttavia, oggi sappiamo che, facendo così, si perde anche molto altro: queste stesse interiorità rappresentano infatti la fonte di ogni gioia, della capacità di amare, di giocare, di ridere e, aspetto per noi ancora più importante, di creare. Nel difendersi dall'inferno che custodisce dentro di sé, l'individuo finisce per separarsi anche dal cielo che vi abita. Nei casi estremi ci troviamo di fronte a una persona ossessionata, monotona, tesa, rigida, fredda, controllata, cauta, incapace di ridere, di giocare o di amare, così come di comportarsi con ingenuità, fiducia o spontaneità infantile. La sua immaginazione, le sue intuizioni, la sua delicatezza e la sua emotività tendono a essere represse o falsificate. (Maslow)</p>
-    </div>
+        <footer class="articolo-footer">
+            <a href="index.html">Torna alla panoramica dell'archivio</a>
+        </footer>
 
-    <!-- Schermata Finale: Il Blog con i collegamenti ai file separati -->
-    <div id="blog-container">
-        <div class="blog-header">
-            <h2>L'ARCHIVIO</h2>
-            <p>Scegli un percorso per esplorare i frammenti.</p>
-        </div>
-        <div class="grid-percorsi">
-            <a href="interni.html" class="card-percorso">
-                <div>
-                    <h3>Interni</h3>
-                    <p>Stanza gotica a volta alta ed angusta.</p>
-                </div>
-                <span class="card-tag">4 Articoli</span>
-            </a>
-            <a href="memorie.html" class="card-percorso">
-                <div>
-                    <h3>Memorie Liquide</h3>
-                    <p>Conoscerai il corso delle stelle, e ammaestrato dalla natura, la tua anima si farà udire potente dentro di te.</p>
-                </div>
-                <span class="card-tag">6 Articoli</span>
-            </a>
-            <a href="oltre.html" class="card-percorso">
-                <div>
-                    <h3>Oltre la Soglia</h3>
-                    <p>Ubertose fontane di ogni vita, a voi il cielo e la terra stanno sospesi, come due lattanti; e a voi ingordamente anela l’esausto mio petto.</p>
-                </div>
-                <span class="card-tag">3 Articoli</span>
-            </a>
-        </div>
     </div>
 
     <script>
-        let audioCtx = null;
-        let isPlaying = false;
-        let fasePoesiaAttiva = false;
-        let faseImmagineAttiva = false;
-        let faseTestoRaggiunta = false;
-        let clickPioggiaCount = 0;
+        const audio = document.getElementById('audio-stanza');
+        const btn = document.getElementById('btn-audio');
+        let inRiproduzione = false;
 
-        let timerPoesia1;
-        let timerImmagine1;
-        let satieInterval = null;
-
-        const fraseTesto = '"Hai gli occhi di tua madre", mi è stato detto. Non sapevo se apprezzare. Ho percepito una lieve dolcezza, un\'infinita disperazione.';
-
-        function startFireplace() {
-            if (isPlaying) return;
-            isPlaying = true;
-            
-            document.getElementById('titolo').style.opacity = '0';
-            mostraPoesia();
-
-            try {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                startSatieAmbiance();
-            } catch (e) {
-                console.log("Audio non avviato", e);
+        function toggleMusica() {
+            if (!inRiproduzione) {
+                audio.volume = 0.5;
+                audio.play().then(() => {
+                    inRiproduzione = true;
+                    btn.innerText = "♪ MUSICA: ON";
+                }).catch(err => {
+                    console.log("Errore riproduzione audio:", err);
+                });
+            } else {
+                audio.pause();
+                inRiproduzione = false;
+                btn.innerText = "♪ MUSICA: OFF";
             }
         }
 
-        function mostraPoesia() {
-            fasePoesiaAttiva = true;
-            faseImmagineAttiva = false;
-            
-            const contPoesia = document.getElementById('container-poesia');
-            contPoesia.style.opacity = '0.9';
-            setTimeout(() => { document.getElementById('linea').style.width = '0px'; }, 100);
-
-            timerPoesia1 = setTimeout(() => {
-                passaImmagine();
-            }, 12100);
-        }
-
-        function passaImmagine() {
-            if (!fasePoesiaAttiva) return; 
-            fasePoesiaAttiva = false;
-            
-            clearTimeout(timerPoesia1);
-
-            const contPoesia = document.getElementById('container-poesia');
-            contPoesia.style.opacity = '0';
-
-            faseImmagineAttiva = true;
-            const contImmagine = document.getElementById('container-immagine');
-            contImmagine.style.opacity = '0.9';
-            setTimeout(() => { document.getElementById('linea-lenta').style.width = '0px'; }, 100);
-
-            timerImmagine1 = setTimeout(() => {
-                passaTestoLungo();
-            }, 20100);
-        }
-
-        function passaTestoLungo() {
-            if (!faseImmagineAttiva) return; 
-            faseImmagineAttiva = false;
-
-            clearTimeout(timerImmagine1);
-
-            const contImmagine = document.getElementById('container-immagine');
-            contImmagine.style.opacity = '0';
-            playFinalSound();
-
-            setTimeout(() => {
-                document.getElementById('testo-lungo').style.opacity = '1';
-                faseTestoRaggiunta = true; 
-            }, 1000);
-        }
-
-        // --- AMBIENTE SONORO ISPIRATO A ERIK SATIE (Armonie sospese in stile Gymnopédie) ---
-        let masterGain = null;
-
-        // Frequenze in Hz che richiamano progressioni modali malinconiche ed estese (accordi di settima/nona aperti)
-        const satieChords = [
-            [220.00, 261.63, 329.63, 392.00], // La minore con estensioni (A minor / modal)
-            [196.00, 246.94, 293.66, 369.99], // Sol maggiore aperto
-            [174.61, 220.00, 261.63, 329.63], // Fa maggiore / minore
-            [164.81, 207.65, 246.94, 311.13]  // Mi sospeso malinconico
-        ];
-
-        function startSatieAmbiance() {
-            masterGain = audioCtx.createGain();
-            masterGain.gain.value = 0.35;
-            masterGain.connect(audioCtx.destination);
-
-            // Avvia subito un ciclo di accordi rarefatti
-            playSatieChordSequence();
-            satieInterval = setInterval(playSatieChordSequence, 7000);
-
-            // Aggiunge un leggerissimo fruscio di fondo stile vinile/stanza antica
-            startVinylHiss();
-        }
-
-        function playSatieChordSequence() {
-            if (!isPlaying || !audioCtx) return;
-
-            // Sceglie un accordo casuale dalla sequenza
-            const chord = satieChords[Math.floor(Math.random() * satieChords.length)];
-            const now = audioCtx.currentTime;
-
-            chord.forEach((freq, index) => {
-                // Crea un oscillatore per ogni nota dell'accordo con timbro morbido (triangolare/seno)
-                const osc = audioCtx.createOscillator();
-                const noteGain = audioCtx.createGain();
-
-                osc.type = index % 2 === 0 ? 'sine' : 'triangle';
-                osc.frequency.setValueAtTime(freq, now);
-
-                // Inviluppo morbidissimo (effetto tasti di pianoforte premuti lentamente e con riverbero naturale)
-                noteGain.gain.setValueAtTime(0.001, now);
-                // Attacco lento
-                noteGain.gain.linearRampToValueAtTime(0.04 / (index + 1), now + 1.5);
-                // Rilascio lunghissimo e sfumato
-                noteGain.gain.exponentialRampToValueAtTime(0.0001, now + 6.5);
-
-                osc.connect(noteGain);
-                noteGain.connect(masterGain);
-
-                osc.start(now);
-                osc.stop(now + 7.0);
+        // Opzionale: prova a far partire la musica in automatico all'apertura (se il browser lo consente)
+        window.addEventListener('load', () => {
+            audio.volume = 0.5;
+            audio.play().then(() => {
+                inRiproduzione = true;
+                btn.innerText = "♪ MUSICA: ON";
+            }).catch(() => {
+                // Se il browser blocca l'autoplay, l'utente userà il pulsante in alto a destra
+                console.log("Autoplay bloccato dal browser, attendendo interazione.");
             });
-        }
-
-        function startVinylHiss() {
-            const bufferSize = audioCtx.sampleRate * 2;
-            const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-            const output = noiseBuffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) {
-                output[i] = (Math.random() * 2 - 1) * 0.05;
-            }
-
-            const whiteNoise = audioCtx.createBufferSource();
-            whiteNoise.buffer = noiseBuffer;
-            whiteNoise.loop = true;
-
-            const filter = audioCtx.createBiquadFilter();
-            filter.type = 'bandpass';
-            filter.frequency.value = 1800;
-            filter.Q.value = 0.5;
-
-            const hissGain = audioCtx.createGain();
-            hissGain.gain.value = 0.08;
-
-            whiteNoise.connect(filter);
-            filter.connect(hissGain);
-            hissGain.connect(masterGain);
-
-            whiteNoise.start();
-        }
-
-        function playFinalSound() {
-            if (!audioCtx) return;
-            try {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(130.81, audioCtx.currentTime); // Do centrale basso
-                osc.frequency.exponentialRampToValueAtTime(65.41, audioCtx.currentTime + 1.2);
-
-                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.2);
-
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-
-                osc.start();
-                osc.stop(audioCtx.currentTime + 1.2);
-            } catch (e) {
-                console.log("Audio extra non partito", e);
-            }
-        }
-
-        function generaPioggiaDiFrasi() {
-            clickPioggiaCount++;
-            let numeroFrasi = clickPioggiaCount === 1 ? 1 : clickPioggiaCount * 2;
-
-            for (let i = 0; i < numeroFrasi; i++) {
-                const div = document.createElement('div');
-                div.className = 'frase-pioggia';
-                div.innerText = fraseTesto;
-
-                let posX = Math.random() * 80 + 10;
-                let durataAnimazione = Math.random() * 2 + 2;
-
-                div.style.left = posX + 'vw';
-                div.style.animationDuration = durataAnimazione + 's';
-                div.style.fontSize = (Math.random() * 0.4 + 1) + 'rem';
-
-                document.body.appendChild(div);
-
-                setTimeout(() => { div.remove(); }, durataAnimazione * 1000);
-            }
-
-            if (clickPioggiaCount >= 6) {
-                faseTestoRaggiunta = false; 
-
-                if (satieInterval) clearInterval(satieInterval);
-                if (masterGain) {
-                    masterGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 2.0);
-                    setTimeout(() => { isPlaying = false; }, 2000);
-                }
-
-                setTimeout(() => {
-                    document.getElementById('testo-lungo').style.opacity = '0';
-                    
-                    setTimeout(() => {
-                        document.getElementById('testo-lungo').style.display = 'none';
-                        const blog = document.getElementById('blog-container');
-                        blog.style.display = 'block';
-                        setTimeout(() => { blog.style.opacity = '1'; }, 50);
-                    }, 1000);
-                }, 1500);
-            }
-        }
-
-        document.addEventListener('click', (e) => {
-            if (e.target.closest('#blog-container')) return;
-
-            if (!isPlaying) {
-                startFireplace();
-            } else if (fasePoesiaAttiva) {
-                passaImmagine(); 
-            } else if (faseImmagineAttiva) {
-                passaTestoLungo(); 
-            } else if (faseTestoRaggiunta) {
-                generaPioggiaDiFrasi(); 
-            }
-        }, { once: false });
+        });
     </script>
 </body>
 </html>
