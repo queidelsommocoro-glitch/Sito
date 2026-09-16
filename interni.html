@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interni & Silenzi - Archivio</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 60px 20px;
+            background-color: #000000;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-y: auto;
+            text-align: left;
+            position: relative;
+        }
+
+        /* Pulsante per tornare indietro */
+        .torna-indietro {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            color: #888;
+            text-decoration: none;
+            font-size: 0.9rem;
+            letter-spacing: 0.1rem;
+            transition: color 0.3s ease;
+            z-index: 10;
+        }
+
+        .torna-indietro:hover {
+            color: #fff;
+        }
+
+        /* Contenitore principale dell'articolo */
+        .articolo-container {
+            max-width: 700px;
+            width: 100%;
+            margin-top: 40px;
+            opacity: 0;
+            animation: fadeIn 1.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .articolo-header {
+            margin-bottom: 50px;
+            text-align: center;
+        }
+
+        .articolo-tag {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2rem;
+            color: #666;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .articolo-header h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 0.05rem;
+            margin: 0 0 15px 0;
+        }
+
+        .articolo-data {
+            color: #777;
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        /* Testo e paragrafi dell'articolo */
+        .articolo-contenuto p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            font-weight: 300;
+            color: #ddd;
+            margin-bottom: 30px;
+        }
+
+        .articolo-contenuto h3 {
+            font-size: 1.4rem;
+            font-weight: 400;
+            margin: 40px 0 20px 0;
+            color: #fff;
+        }
+
+        /* Immagine opzionale all'interno dell'articolo */
+        .articolo-immagine {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin: 40px 0;
+            opacity: 0.9;
+        }
+
+        /* Linea divisoria elegante */
+        .separatore {
+            width: 100px;
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.2);
+            margin: 60px auto;
+        }
+
+        /* Footer dell'articolo */
+        .articolo-footer {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .articolo-footer a {
+            color: #aaa;
+            text-decoration: none;
+            font-size: 0.95rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .articolo-footer a:hover {
+            color: #fff;
+            border-color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Link per tornare alla home / archivio -->
+    <a href="index.html" class="torna-indietro">← Torna all'Archivio</a>
+
+    <div class="articolo-container">
+        
+        <header class="articolo-header">
+            <span class="articolo-tag">Interni & Silenzi • Articolo I</span>
+            <h1>La stanza vuota</h1>
+            <span class="articolo-data">Frammento raccolto nel silenzio</span>
+        </header>
+
+        <div class="articolo-contenuto">
+            <p>Sono triste anche perché questi fogli non compongono un impero, non dipingono sulle tue labbra il nettare dell'ammaliamento, non costruiscono ossature di case e terreni imperiali.
+
+</p>
+            
+            <p>Sono triste per questo amore potentissimo nella supposizione del desiderio, sterile tra le mie gracili mani di vecchio, di inetto, di quasi senza tetto. Sono triste per questo sogno sfolgorante di sole che entra piano dalle finestre in una villa di Karmitz, e si sbriciola tra pesanti gocce di piocca tropicale nella penisola della realtà. Sono triste per i miei vent'anni finiti nel fondo della Dora, coperti di scorregge e sperme, sputi e antidepressivi. Sono triste per quel ti amo che osavo dire, incosciente, splendido; che potrebbe anche andar via spinto da un ti voglio bene, ed è invece solo incenerito, vapore del deserto, onda di risacca, osso di seppia cadaverico. Urrà, urlando i custodi dell'Apocalisse, spenti e drogati sulle scale che portano al mio appartamento, qui c'è un re, e non è nemmeno un re, è un esserino piccolo come un pidocchio, il nostro fiato lo sommerge, lui grugnisce, guardate che ridere stretto a questo collare, se spingo un po' col braccio ci segue e se spingo ancora, che, si butta? Dal quinto piano? Oh, no, almeno questo. Fa in tempo a chiudere le porte. Ma lo sentite quel desiderio. Lo sentite, non è eccitanti, compari dell'Ultimo Flagello?
+Affacciamoci, ed ecco, lo vedo. Ha acceso una candela. Pensa di poter fare a meno della corrente. Una candela misera, chissà quanto durerà. Sta scrivendo qualcosa su un foglio, alla luce fioca, scrive che sembrano cacche di mosca, nemmeno arabo, nemmeno un lingua, nemmeno un segno, non credo che valga per noi…
+</p>
+
+            <!-- Se vuoi aggiungere un'immagine, inserisci il nome del file qui sotto -->
+            <!-- <img src="tua-immagine.jpg" alt="Dettaglio" class="articolo-immagine"> -->
+
+            
+            <p> Oh, Compari! Una donna. Conviene si taccia (si nascondono).  Lei passa, van via.  <br>
+
+Lei piange, loro ritornano. <br>
+
+Lei passa, van via.  <br>
+
+Lei piange, loro ritornano.  <br>
+ </p>
+            
+            <p> Bussa alla porta, non apro. Ribussa. Mi chiede "Che, piangi?", mi sente annaspare, ed io nel riflesso che dallo specchio si spinge all'ingresso sobbalzo, che affare, che fare, sarà meglio andare, che senso molesto restare da solo sospeso con quest'affare, un Kraken da carnevale, che gioia letale, ed allora le apro la porta. Lei fa un passo, poi sosta. Mi dice "che aspetti?", ed io "Resto", mi prende la vita e mi stringe "se ti bacio, non ti rispetto?", non so cosa dire, non devo finire così, in questa veste di sogno disonesto, vannacciano, lucapoviano, eppure la mente mi dice la norma a cui tende la normalità è quella là, la gioia del prima della sessualità. Respira. Già è via. Sul balcone ritorna la bestia antiUnesco. 
+
+ </p>
+<p> Mi manca, aveva un profumo… di fata. Di fiore e rugiada, di lavanda su tela lavata, di caffè al mattino. E questo il destino?
+Non so cosa farmene, è il destino di un altro, anche se sosto alla porta e fumo tabacco virile non è così che può finire. Non è così che può finire. E poi a me che importa? Chi mi ha innestato questo sogno rupestre quand'ero bambino, nel cranio, con la precisione del fato e con la pressione di un credo divino?   </p>
+
+<p>Torno alle mie tende, alla mia candela, ad un canto altalenante e folktronico degli anni Novanta, le ombre oscillano fragili, con loro i tentacoli del mio amico stampato sulla bottiglia, rubato dalla Disgrazia, finito nella Disgrazia. Non c'è certo un canto di Natale da ribattere a quei bastardi cornuti sul balcone. Volano e graffiano, ansimano alle pareti appannando il vetro, li vedo menare all'aria il loro pene molesto. Io non sono dei vostri pare, le mie carte sono molteplici ed il mio odio verso di voi è infinito, eppure, eppure anche l'amore, allora sedetevi (ci divide una finestra), accoccolatevi alle mie gambe (l'ho aperta) e leccatemi i piedi.
+
+<br>Sono il re delle Creature Selvagge, dico guardandoli negli occhi, accarezzando loro la testa in attesa della mia saliva e donandogliela con amorevole disprezzo. Sono il re delle Creature Selvagge, almeno stanotte. 
+
+<br>Avrò quindi un letto caldo?  </p>
+        </div>
+
+        <div class="separatore"></div>
+
+        <footer class="articolo-footer">
+            <a href="index.html">Torna alla panoramica dell'archivio</a>
+        </footer>
+
+    </div>
+
+</body>
+</html>
