@@ -52,7 +52,7 @@
             font-size: 0.8rem;
             letter-spacing: 0.1rem;
             z-index: 10;
-            pointer-events: none; /* Lascia passare il click per far partire la musica */
+            pointer-events: none;
         }
 
         /* Contenitore principale dell'articolo */
@@ -98,7 +98,7 @@
 
         /* Testo e paragrafi dell'articolo */
         .articolo-contenuto p {
-            font-size: 1.15rem;
+            font-size: 1.12rem;
             line-height: 1.9;
             font-weight: 300;
             color: #ddd;
@@ -142,10 +142,10 @@
     <a href="index.html" class="torna-indietro" onclick="event.stopPropagation();">← Torna all'Archivio</a>
 
     <!-- Indicatore audio -->
-    <div id="btn-audio" class="controllo-audio">♪ MUSICA: IN ATTESA</div>
+    <div id="btn-audio" class="controllo-audio">♪ CLICCA OVUNQUE PER LA MUSICA</div>
 
-    <!-- File audio di Sébastien Schuller -->
-    <audio id="audio-stanza" src="Sébastien Schuller - Weeping Willow (1).mp3" loop></audio>
+    <!-- File audio rinominato in ciao.mp3 nella stessa cartella -->
+    <audio id="audio-stanza" src="ciao.mp3" loop></audio>
 
     <div class="articolo-container" onclick="event.stopPropagation();">
         
@@ -156,9 +156,25 @@
         </header>
 
         <div class="articolo-contenuto">
+            <p>Sono triste anche perché questi fogli non compongono un impero, non dipingono sulle tue labbra il nettare dell'ammaliamento, non costruiscono ossature di case e terreni imperiali.</p>
+
+            <p>Sono triste per questo amore potentissimo nella supposizione del desiderio, sterile tra le mie gracili mani di vecchio, di inetto, di quasi senza tetto. Sono triste per questo sogno sfolgorante di sole che entra piano dalle finestre in una villa di Karmitz, e si sbriciola tra pesanti gocce di piocca tropicale nella penisola della realtà. Sono triste per i miei vent'anni finiti nel fondo della Dora, coperti di scorregge e sperme, sputi e antidepressivi. Sono triste per quel ti amo che osavo dire, incosciente, splendido; che potrebbe anche andar via spinto da un ti voglio bene, ed è invece solo incenerito, vapore del deserto, onda di risacca, osso di seppia cadaverico. Urrà, urlando i custodi dell'Apocalisse, spenti e drogati sulle scale che portano al mio appartamento, qui c'è un re, e non è nemmeno un re, è un esserino piccolo come un pidocchio, il nostro fiato lo sommerge, lui grugnisce, guardate che ridere stretto a questo collare, se spingo un po' col braccio ci segue e se spingo ancora, che, si butta? Dal quinto piano? Oh, no, almeno questo. Fa in tempo a chiudere le porte. Ma lo sentite quel desiderio. Lo sentite, non è eccitanti, compari dell'Ultimo Flagello? Affacciamoci, ed ecco, lo vedo. Ha acceso una candela. Pensa di poter fare a meno della corrente. Una candela misera, chissà quanto durerà. Sta scrivendo qualcosa su un foglio, alla luce fioca, scrive che sembrano cacche di mosca, nemmeno arabo, nemmeno un lingua, nemmeno un segno, non credo che valga per noi…</p>
+
+            <p>Oh, Compari! Una donna. Conviene si taccia (si nascondono). Lei passa, van via.</p>
+
+            <p>Lei piange, loro ritornano.</p>
+
+            <p>Lei passa, van via.</p>
+
+            <p>Lei piange, loro ritornano.</p>
+
+            <p>Bussa alla porta, non apro. Ribussa. Mi chiede "Che, piangi?", mi sente annaspare, ed io nel riflesso che dallo specchio si spinge all'ingresso sobbalzo, che affare, che fare, sarà meglio andare, che senso molesto restare da solo sospeso con quest'affare, un Kraken da carnevale, che gioia letale, ed allora le apro la porta. Lei fa un passo, poi sosta. Mi dice "che aspetti?", ed io "Resto", mi prende la vita e mi stringe "se ti bacio, non ti rispetto?", non so cosa dire, non devo finire così, in questa veste di sogno disonesto, vannacciano, lucapoviano, eppure la mente mi dice la norma a cui tende la normalità è quella là, la gioia del prima della sessualità. Respira. Già è via. Sul balcone ritorna la bestia antiUnesco.</p>
+
+            <p>Mi manca, aveva un profumo… di fata. Di fiore e rugiada, di lavanda su tela lavata, di caffè al mattino. E questo il destino? Non so cosa farmene, è il destino di un altro, anche se sosto alla porta e fumo tabacco virile non è così che può finire. Non è così che può finire. E poi a me che importa? Chi mi ha innestato questo sogno rupestre quand'ero bambino, nel cranio, con la precisione del fato e con la pressione di un credo divino?</p>
+
             <p>Torno alle mie tende, alla mia candela, ad un canto altalenante e folktronico degli anni Novanta, le ombre oscillano fragili, con loro i tentacoli del mio amico stampato sulla bottiglia, rubato dalla Disgrazia, finito nella Disgrazia. Non c'è certo un canto di Natale da ribattere a quei bastardi cornuti sul balcone. Volano e graffiano, ansimano alle pareti appannando il vetro, li vedo menare all'aria il loro pene molesto. Io non sono dei vostri pare, le mie carte sono molteplici ed il mio odio verso di voi è infinito, eppure, eppure anche l'amore, allora sedetevi (ci divide una finestra), accoccolatevi alle mie gambe (l'ho aperta) e leccatemi i piedi.</p>
-            
-            <p>Sono il re delle Creature Selvagge, dico guardandoli negli occhi, accarezzando loro la testa in attesa della saliva e donandogliela con amorevole disprezzo. Sono il re delle Creature Selvagge, almeno stanotte.</p>
+
+            <p>Sono il re delle Creature Selvagge, dico guardandoli negli occhi, accarezzando loro la testa in attesa della mia saliva e donandogliela con amorevole disprezzo. Sono il re delle Creature Selvagge, almeno stanotte.</p>
 
             <p>Avrò quindi un letto caldo?</p>
         </div>
@@ -187,18 +203,6 @@
                     console.log("Errore riproduzione audio:", err);
                 });
             }
-        });
-
-        // Tentativo di autoplay iniziale
-        window.addEventListener('load', () => {
-            audio.volume = 0.5;
-            audio.play().then(() => {
-                audioAvviato = true;
-                indicatoreAudio.innerText = "♪ MUSICA: ON";
-            }).catch(() => {
-                // Se bloccato, basta un click sulla pagina e partirà subito
-                indicatoreAudio.innerText = "♪ CLICCA OVUNQUE PER LA MUSICA";
-            });
         });
     </script>
 </body>
