@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404</title>
+    <title>404 - Archivio</title>
     <style>
         body {
             margin: 0;
@@ -22,6 +22,7 @@
             text-align: center;
             position: relative;
             overflow-x: hidden;
+            transition: background-color 2s ease;
         }
 
         /* Stile della scritta iniziale 404 */
@@ -53,7 +54,6 @@
             margin-bottom: 25px;
         }
 
-        /* Prima linea lenta */
         #linea {
             width: 250px;
             height: 2px;
@@ -79,7 +79,6 @@
             margin-bottom: 20px;
         }
 
-        /* Seconda linea lenta */
         #linea-lenta {
             width: 300px;
             height: 2px;
@@ -103,12 +102,11 @@
             margin: auto;
         }
 
-        /* Stile per le frasi che cadono a pioggia */
+        /* Frasi a pioggia */
         .frase-pioggia {
             position: fixed;
             top: -50px;
             color: rgba(255, 255, 255, 0.85);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             font-size: 1.2rem;
             font-style: italic;
             pointer-events: none;
@@ -118,29 +116,96 @@
         }
 
         @keyframes caduta {
-            0% {
-                transform: translateY(0);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(110vh);
-                opacity: 0;
-            }
+            0% { transform: translateY(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(110vh); opacity: 0; }
+        }
+
+        /* --- STILE DEL NUOVO BLOG (SCHERMATA FINALE) --- */
+        #blog-container {
+            display: none;
+            opacity: 0;
+            transition: opacity 2s ease;
+            max-width: 1000px;
+            width: 100%;
+            margin: auto;
+            padding: 40px 20px;
+            text-align: left;
+            pointer-events: auto;
+            cursor: default;
+        }
+
+        .blog-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .blog-header h2 {
+            font-size: 2.2rem;
+            font-weight: 300;
+            letter-spacing: 0.2rem;
+            margin-bottom: 10px;
+        }
+
+        .blog-header p {
+            color: #888;
+            font-size: 1rem;
+        }
+
+        .grid-percorsi {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .card-percorso {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 30px;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-percorso:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .card-percorso h3 {
+            font-size: 1.3rem;
+            font-weight: 400;
+            margin-top: 0;
+            margin-bottom: 15px;
+            letter-spacing: 0.05rem;
+        }
+
+        .card-percorso p {
+            color: #aaa;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .card-tag {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+            color: #666;
         }
     </style>
 </head>
 <body>
 
-    <!-- La scritta iniziale -->
     <h1 id="titolo">404</h1>
 
-    <!-- Fase 1: Poesia + Prima linea lenta -->
     <div id="container-poesia">
         <div id="poesia">
             C'è forse un dolce alla fine<br>
@@ -149,15 +214,44 @@
         <div id="linea"></div>
     </div>
 
-    <!-- Fase 2: Immagine + Seconda linea lenta -->
     <div id="container-immagine">
         <img id="immagine-finale" src="file_00000000266461f4871240ecb87d077a.png" alt="Sorpresa">
         <div id="linea-lenta"></div>
     </div>
 
-    <!-- Fase 3: Il testo lungo finale -->
     <div id="testo-lungo">
         <p>L'adattamento dell'uomo comune, di buon senso ed equilibrato, comporta un rifiuto continuo e sistematico di molti aspetti interiori della natura umana, sia cognitivi che conativi. Adattarsi al mondo reale presuppone una divisione della persona, la quale volta le spalle a gran parte della propria interiorità perché la percepisce come pericolosa. Tuttavia, oggi sappiamo che, facendo così, si perde anche molto altro: queste stesse interiorità rappresentano infatti la fonte di ogni gioia, della capacità di amare, di giocare, di ridere e, aspetto per noi ancora più importante, di creare. Nel difendersi dall'inferno che custodisce dentro di sé, l'individuo finisce per separarsi anche dal cielo che vi abita. Nei casi estremi ci troviamo di fronte a una persona ossessionata, monotona, tesa, rigida, fredda, controllata, cauta, incapace di ridere, di giocare o di amare, così come di comportarsi con ingenuità, fiducia o spontaneità infantile. La sua immaginazione, le sue intuizioni, la sua delicatezza e la sua emotività tendono a essere represse o falsificate.(Maslow)</p>
+    </div>
+
+    <!-- Schermata Finale: Il Blog con i percorsi -->
+    <div id="blog-container">
+        <div class="blog-header">
+            <h2>L'ARCHIVIO</h2>
+            <p>Scegli un percorso per esplorare i frammenti.</p>
+        </div>
+        <div class="grid-percorsi">
+            <a href="#" class="card-percorso" onclick="alert('Accesso al Percorso: Interni'); return false;">
+                <div>
+                    <h3>Interni & Silenzi</h3>
+                    <p>Riflessioni sulla solitudine, la frammentazione dell'io e gli spazi nascosti della mente.</p>
+                </div>
+                <span class="card-tag">4 Articoli</span>
+            </a>
+            <a href="#" class="card-percorso" onclick="alert('Accesso al Percorso: Memorie'); return false;">
+                <div>
+                    <h3>Memorie Liquide</h3>
+                    <p>Racconti, echi familiari, eredità emotive e lo specchio di ciò che siamo stati.</p>
+                </div>
+                <span class="card-tag">6 Articoli</span>
+            </a>
+            <a href="#" class="card-percorso" onclick="alert('Accesso al Percorso: Oltre'); return false;">
+                <div>
+                    <h3>Oltre la Soglia</h3>
+                    <p>Errori di sistema, transizioni digitali e varchi verso dimensioni alternative.</p>
+                </div>
+                <span class="card-tag">3 Articoli</span>
+            </a>
+        </div>
     </div>
 
     <script>
@@ -165,6 +259,7 @@
         let isPlaying = false;
         let faseTestoRaggiunta = false;
         let clickPioggiaCount = 0;
+        let currentMode = 'fireplace'; // 'fireplace' o 'water'
 
         const fraseTesto = '"Hai gli occhi di tua madre", mi è stato detto. Non sapevo se apprezzare. Ho percepito una lieve dolcezza, un\'infinita disperazione.';
 
@@ -172,100 +267,140 @@
             if (isPlaying) return;
             isPlaying = true;
             
-            // 1. Sparisce 404 e appare la poesia con la prima linea (12 secondi)
             document.getElementById('titolo').style.opacity = '0';
             const contPoesia = document.getElementById('container-poesia');
             contPoesia.style.opacity = '0.9';
 
-            setTimeout(() => {
-                document.getElementById('linea').style.width = '0px';
-            }, 100);
+            setTimeout(() => { document.getElementById('linea').style.width = '0px'; }, 100);
 
-            // 2. Dopo 12.1 secondi: sparisce la poesia e compare l'immagine con la seconda linea (20 secondi)
             setTimeout(() => {
                 contPoesia.style.opacity = '0';
                 const contImmagine = document.getElementById('container-immagine');
                 contImmagine.style.opacity = '0.9';
 
-                setTimeout(() => {
-                    document.getElementById('linea-lenta').style.width = '0px';
-                }, 100);
+                setTimeout(() => { document.getElementById('linea-lenta').style.width = '0px'; }, 100);
 
-                // 3. Dopo altri 20.1 secondi: sparisce l'immagine e compare il testo lungo
                 setTimeout(() => {
                     contImmagine.style.opacity = '0';
                     playFinalSound();
 
                     setTimeout(() => {
                         document.getElementById('testo-lungo').style.opacity = '1';
-                        faseTestoRaggiunta = true; // Sblocca la fase della pioggia di frasi
+                        faseTestoRaggiunta = true; 
                     }, 1000);
                 }, 20100);
-
             }, 12100);
 
             try {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                
-                const bufferSize = 2 * audioCtx.sampleRate;
-                const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-                const output = noiseBuffer.getChannelData(0);
-                for (let i = 0; i < bufferSize; i++) {
-                    output[i] = Math.random() * 2 - 1;
-                }
-
-                const whiteNoise = audioCtx.createBufferSource();
-                whiteNoise.buffer = noiseBuffer;
-                whiteNoise.loop = true;
-
-                const filter = audioCtx.createBiquadFilter();
-                filter.type = 'lowpass';
-                filter.frequency.value = 400;
-
-                const gainNode = audioCtx.createGain();
-                gainNode.gain.value = 0.25;
-
-                whiteNoise.connect(filter);
-                filter.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-                whiteNoise.start();
-
-                function popCrackle() {
-                    if (!isPlaying) return;
-                    const delay = Math.random() * 400 + 50;
-                    setTimeout(() => {
-                        if (!isPlaying) return;
-                        
-                        const popBuffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.05, audioCtx.sampleRate);
-                        const popData = popBuffer.getChannelData(0);
-                        for (let j = 0; j < popBuffer.length; j++) {
-                            popData[j] = (Math.random() * 2 - 1) * Math.exp(-j / (audioCtx.sampleRate * 0.01));
-                        }
-
-                        const popSource = audioCtx.createBufferSource();
-                        popSource.buffer = popBuffer;
-
-                        const popFilter = audioCtx.createBiquadFilter();
-                        popFilter.type = 'bandpass';
-                        popFilter.frequency.value = Math.random() * 2000 + 1000;
-                        popFilter.Q.value = 3;
-
-                        const popGain = audioCtx.createGain();
-                        popGain.gain.value = Math.random() * 0.4 + 0.1;
-
-                        popSource.connect(popFilter);
-                        popFilter.connect(popGain);
-                        popGain.connect(audioCtx.destination);
-                        
-                        popSource.start();
-                        popCrackle();
-                    }, delay);
-                }
-
-                popCrackle();
-
+                startFireplaceAudio();
             } catch (e) {
                 console.log("Audio non avviato", e);
+            }
+        }
+
+        // --- AUDIO CAMINETTO ---
+        let whiteNoiseSource = null;
+        let gainNodeFire = null;
+
+        function startFireplaceAudio() {
+            const bufferSize = 2 * audioCtx.sampleRate;
+            const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const output = noiseBuffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) { output[i] = Math.random() * 2 - 1; }
+
+            whiteNoiseSource = audioCtx.createBufferSource();
+            whiteNoiseSource.buffer = noiseBuffer;
+            whiteNoiseSource.loop = true;
+
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.value = 400;
+
+            gainNodeFire = audioCtx.createGain();
+            gainNodeFire.gain.value = 0.25;
+
+            whiteNoiseSource.connect(filter);
+            filter.connect(gainNodeFire);
+            gainNodeFire.connect(audioCtx.destination);
+            whiteNoiseSource.start();
+
+            popCrackle();
+        }
+
+        function popCrackle() {
+            if (!isPlaying || currentMode !== 'fireplace') return;
+            const delay = Math.random() * 400 + 50;
+            setTimeout(() => {
+                if (!isPlaying || currentMode !== 'fireplace') return;
+                
+                const popBuffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.05, audioCtx.sampleRate);
+                const popData = popBuffer.getChannelData(0);
+                for (let j = 0; j < popBuffer.length; j++) {
+                    popData[j] = (Math.random() * 2 - 1) * Math.exp(-j / (audioCtx.sampleRate * 0.01));
+                }
+
+                const popSource = audioCtx.createBufferSource();
+                popSource.buffer = popBuffer;
+
+                const popFilter = audioCtx.createBiquadFilter();
+                popFilter.type = 'bandpass';
+                popFilter.frequency.value = Math.random() * 2000 + 1000;
+                popFilter.Q.value = 3;
+
+                const popGain = audioCtx.createGain();
+                popGain.gain.value = Math.random() * 0.4 + 0.1;
+
+                popSource.connect(popFilter);
+                popFilter.connect(popGain);
+                popGain.connect(audioCtx.destination);
+                
+                popSource.start();
+                popCrackle();
+            }, delay);
+        }
+
+        // --- AUDIO GOCCE D'ACQUA NEI VASI ---
+        function startWaterDropsAudio() {
+            currentMode = 'water';
+            // Spegne dolcemente il caminetto
+            if (gainNodeFire) {
+                gainNodeFire.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.5);
+                setTimeout(() => { if (whiteNoiseSource) whiteNoiseSource.stop(); }, 1500);
+            }
+
+            // Avvia il loop delle gocce d'acqua
+            function loopDrop() {
+                if (!isPlaying) return;
+                playWaterDrop();
+                const nextTime = Math.random() * 1500 + 800; // ogni 0.8 - 2.3 secondi una goccia
+                setTimeout(loopDrop, nextTime);
+            }
+            loopDrop();
+        }
+
+        function playWaterDrop() {
+            if (!audioCtx) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = 'sine';
+                // Frequenza tipica del "bloop" di una goccia d'acqua in un vaso (da acuto a un po' più grave)
+                let startFreq = Math.random() * 400 + 800; 
+                osc.frequency.setValueAtTime(startFreq, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(startFreq - 300, audioCtx.currentTime + 0.15);
+
+                gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.35);
+            } catch (e) {
+                console.log("Errore audio goccia", e);
             }
         }
 
@@ -292,11 +427,8 @@
             }
         }
 
-        // Funzione per generare le frasi a pioggia
         function generaPioggiaDiFrasi() {
             clickPioggiaCount++;
-            
-            // Determina quante frasi far cadere in base ai clic (esponenziale o lineare)
             let numeroFrasi = clickPioggiaCount === 1 ? 1 : clickPioggiaCount * 2;
 
             for (let i = 0; i < numeroFrasi; i++) {
@@ -304,38 +436,40 @@
                 div.className = 'frase-pioggia';
                 div.innerText = fraseTesto;
 
-                // Posizionamento casuale orizzontale e durata variabile della caduta
-                let posX = Math.random() * 80 + 10; // tra il 10% e il 90% della larghezza
-                let durataAnimazione = Math.random() * 2 + 2; // tra 2 e 4 secondi
+                let posX = Math.random() * 80 + 10;
+                let durataAnimazione = Math.random() * 2 + 2;
 
                 div.style.left = posX + 'vw';
                 div.style.animationDuration = durataAnimazione + 's';
-                div.style.fontSize = (Math.random() * 0.4 + 1) + 'rem'; // leggere variazioni di dimensione
+                div.style.fontSize = (Math.random() * 0.4 + 1) + 'rem';
 
                 document.body.appendChild(div);
 
-                // Rimuove l'elemento dal DOM alla fine dell'animazione
-                setTimeout(() => {
-                    div.remove();
-                }, durataAnimazione * 1000);
+                setTimeout(() => { div.remove(); }, durataAnimazione * 1000);
             }
 
-            // Se si esagera con i clic (es. dopo 6 passaggi di pioggia intensa), sovrasta tutto e pulisce per la prossima schermata
+            // A 6 clic si attiva la transizione al Blog e partono le gocce d'acqua
             if (clickPioggiaCount >= 6) {
+                faseTestoRaggiunta = false; // Blocca ulteriori piogge
+                startWaterDropsAudio(); // Passa all'audio delle gocce nei vasi
+
                 setTimeout(() => {
-                    document.body.style.transition = "background-color 2s ease, opacity 2s ease";
-                    document.body.style.backgroundColor = "#ffffff"; // Flash bianco o transizione totale
                     document.getElementById('testo-lungo').style.opacity = '0';
                     
                     setTimeout(() => {
-                        // QUI DEFINIRAI LA PROSSIMA SCHERMATA
-                        document.body.innerHTML = "<div style='color:black; font-size: 2rem; display:flex; justify-content:center; align-items:center; height:100vh;'>[ Prossima Schermata in arrivo... ]</div>";
-                    }, 2000);
+                        document.getElementById('testo-lungo').style.display = 'none';
+                        const blog = document.getElementById('blog-container');
+                        blog.style.display = 'block';
+                        setTimeout(() => { blog.style.opacity = '1'; }, 50);
+                    }, 1000);
                 }, 1500);
             }
         }
 
-        document.addEventListener('click', () => {
+        document.addEventListener('click', (e) => {
+            // Evita di registrare clic se si clicca direttamente sui link del blog
+            if (e.target.closest('#blog-container')) return;
+
             if (!isPlaying) {
                 startFireplace();
             } else if (faseTestoRaggiunta) {
