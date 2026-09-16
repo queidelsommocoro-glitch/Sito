@@ -144,9 +144,6 @@
     <!-- Indicatore audio -->
     <div id="btn-audio" class="controllo-audio">♪ CLICCA OVUNQUE PER IL CAMINETTO</div>
 
-    <!-- Audio del caminetto in streaming diretto (nessun file esterno da caricare su GitHub) -->
-    <audio id="audio-caminetto" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c370211fc5.mp3?filename=fireplace-crackling-103323.mp3" loop></audio>
-
     <div class="articolo-container" onclick="event.stopPropagation();">
         
         <header class="articolo-header">
@@ -168,7 +165,7 @@
 
             <p>Lei piange, loro ritornano.</p>
 
-            <p>Bussa alla porta, non apro. Ribussa. Mi chiede "Che, piangi?", mi sente annaspare, ed io nel riflesso che dallo specchio si spinge all'ingresso sobbalzo, che affare, che fare, sarà meglio andare, che senso molesto restare da solo sospeso con quest'affare, un Kraken da carnevale, che gioia letale, ed allora le apro la porta. Lei fa un passo, poi sosta. Mi dice "che aspetti?", ed io "Resto", mi prende la vita e mi stringe "se ti bacio, non ti rispetto?", non so cosa dire, non devo finire così, in questa veste di sogno disonesto, vannacciano, lucapoviano, eppure la mente mi dice la norma a cui tende la normalità è quella là, la gioia del prima della sessualità. Respira. Giż è via. Sul balcone ritorna la bestia antiUnesco.</p>
+            <p>Bussa alla porta, non apro. Ribussa. Mi chiede "Che, piangi?", mi sente annaspare, ed io nel riflesso che dallo specchio si spinge all'ingresso sobbalzo, character, che affare, che fare, sarà meglio andare, che senso molesto restare da solo sospeso con quest'affare, un Kraken da carnevale, che gioia letale, ed allora le apro la porta. Lei fa un passo, poi sosta. Mi dice "che aspetti?", ed io "Resto", mi prende la vita e mi stringe "se ti bacio, non ti rispetto?", non so cosa dire, non devo finire così, in questa veste di sogno disonesto, vannacciano, lucapoviano, eppure la mente mi dice la norma a cui tende la normalità è quella là, la gioia del prima della sessualità. Respira. Già è via. Sul balcone ritorna la bestia antiUnesco.</p>
 
             <p>Mi manca, aveva un profumo… di fata. Di fiore e rugiada, di lavanda su tela lavata, di caffè al mattino. E questo il destino? Non so cosa farmene, è il destino di un altro, anche se sosto alla porta e fumo tabacco virile non è così che può finire. Non è così che può finire. E poi a me che importa? Chi mi ha innestato questo sogno rupestre quand'ero bambino, nel cranio, con la precisione del fato e con la pressione di un credo divino?</p>
 
@@ -188,21 +185,77 @@
     </div>
 
     <script>
-        const audio = document.getElementById('audio-caminetto');
         const indicatoreAudio = document.getElementById('btn-audio');
         let audioAvviato = false;
 
-        // L'audio del caminetto parte al primo click ovunque nella pagina
-        document.addEventListener('click', () => {
-            if (!audioAvviato) {
-                audio.volume = 0.6;
-                audio.play().then(() => {
-                    audioAvviato = true;
-                    indicatoreAudio.innerText = "♪ CAMINETTO: ON";
-                }).catch(err => {
-                    console.log("Errore riproduzione audio:", err);
-                });
+        // Generatore sintetico del caminetto tramite Web Audio API (nessun file esterno richiesto)
+        function avviaCaminetto() {
+            if (audioAvviato) return;
+            
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
             }
+
+            // 1. Creazione del rumore bianco di fondo (il fruscio della legna / aria calda)
+            const bufferSize = 2 * audioCtx.sampleRate;
+            const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const output = noiseBuffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                output[i] = Math.random() * 2 - 1;
+            }
+
+            const whiteNoise = audioCtx.createBufferSource();
+            whiteNoise.buffer = noiseBuffer;
+            whiteNoise.loop = true;
+
+            // Filtro passa-basso per rendere il fruscio caldo e cupo, simile al fuoco
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.value = 600;
+
+            const gainNode = audioCtx.createGain();
+            gainNode.gain.value = 0.15; // Volume calibrato e rilassante
+
+            whiteNoise.connect(filter);
+            filter.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            whiteNoise.start();
+
+            // 2. Generatore casuale di scoppiettii (crackles)
+            function scoppioCasuale() {
+                if (!audioAvviato) return;
+                
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                // Frequenze casuali acute per simulare la legna che scoppietta
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(80 + Math.random() * 400, audioCtx.currentTime);
+                
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.05);
+
+                // Pianifica il prossimo scoppio a intervalli casuali
+                const prossimoScoppio = Math.random() * 800 + 100;
+                setTimeout(scoppioCasuale, prossimoScoppio);
+            }
+
+            setTimeout(scoppioCasuale, 500);
+
+            audioAvviato = true;
+            indicatoreAudio.innerText = "♪ CAMINETTO: ON";
+        }
+
+        // Si attiva al primo click ovunque nella pagina (per rispettare le regole dei browser)
+        document.addEventListener('click', () => {
+            avviaCaminetto();
         });
     </script>
 </body>
