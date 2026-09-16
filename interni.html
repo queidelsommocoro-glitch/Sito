@@ -18,7 +18,6 @@
             overflow-y: auto;
             text-align: left;
             position: relative;
-            cursor: pointer;
         }
 
         /* Pulsante per tornare indietro */
@@ -32,27 +31,89 @@
             letter-spacing: 0.1rem;
             transition: color 0.3s ease;
             z-index: 10;
-            cursor: pointer;
         }
 
         .torna-indietro:hover {
             color: #fff;
         }
 
-        /* Indicatore audio discreto in alto a destra */
-        .controllo-audio {
+        /* Caminetto / Fuoco scoppiettante in basso a destra */
+        .caminetto {
             position: fixed;
-            top: 30px;
-            right: 30px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: #aaa;
-            padding: 8px 14px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            letter-spacing: 0.1rem;
+            bottom: 25px;
+            right: 25px;
+            width: 80px;
+            height: 60px;
+            background: #111;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            overflow: hidden;
             z-index: 10;
-            pointer-events: none;
+            box-shadow: 0 0 15px rgba(255, 69, 0, 0.2);
+        }
+
+        .fiamme {
+            position: relative;
+            width: 50px;
+            height: 35px;
+        }
+
+        .fiamma {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 20px;
+            height: 30px;
+            background: linear-gradient(to top, #ff4500, #ff8c00, #ffd700);
+            border-radius: 50% 50% 20% 20%;
+            transform-origin: bottom center;
+            mix-blend-mode: screen;
+            animation: scoppietta 0.8s infinite alternate ease-in-out;
+        }
+
+        .fiamma:nth-child(2) {
+            width: 15px;
+            height: 25px;
+            left: 30%;
+            background: linear-gradient(to top, #ff2200, #ff5500, #ffaa00);
+            animation-duration: 0.5s;
+            animation-delay: 0.2s;
+        }
+
+        .fiamma:nth-child(3) {
+            width: 18px;
+            height: 20px;
+            left: 60%;
+            animation-duration: 0.6s;
+            animation-delay: 0.1s;
+        }
+
+        @keyframes scoppietta {
+            0% {
+                transform: scale(1) rotate(-5deg) translate(0, 0);
+                opacity: 0.8;
+            }
+            50% {
+                transform: scale(1.15) rotate(3deg) translate(0, -3px);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0.9) rotate(-2deg) translate(0, 2px);
+                opacity: 0.7;
+            }
+        }
+
+        .legna {
+            width: 60px;
+            height: 8px;
+            background: #3e2723;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            box-shadow: 0 -2px 5px rgba(255, 69, 0, 0.5);
         }
 
         /* Contenitore principale dell'articolo */
@@ -62,7 +123,6 @@
             margin-top: 40px;
             opacity: 0;
             animation: fadeIn 1.5s ease forwards;
-            cursor: default;
         }
 
         @keyframes fadeIn {
@@ -118,7 +178,6 @@
         .articolo-footer {
             text-align: center;
             margin-bottom: 40px;
-            cursor: pointer;
         }
 
         .articolo-footer a {
@@ -139,15 +198,19 @@
 <body>
 
     <!-- Link per tornare alla home / archivio -->
-    <a href="index.html" class="torna-indietro" onclick="event.stopPropagation();">← Torna all'Archivio</a>
+    <a href="index.html" class="torna-indietro">← Torna all'Archivio</a>
 
-    <!-- Indicatore audio -->
-    <div id="btn-audio" class="controllo-audio">♪ CLICCA OVUNQUE PER LA MUSICA</div>
+    <!-- Caminetto visivo animato in basso a destra -->
+    <div class="caminetto" title="Un fuoco scoppiettante">
+        <div class="fiamme">
+            <div class="fiamma"></div>
+            <div class="fiamma"></div>
+            <div class="fiamma"></div>
+        </div>
+        <div class="legna"></div>
+    </div>
 
-    <!-- File audio rinominato in ciao.mp3 nella stessa cartella -->
-    <audio id="audio-stanza" src="ciao.mp3" loop></audio>
-
-    <div class="articolo-container" onclick="event.stopPropagation();">
+    <div class="articolo-container">
         
         <header class="articolo-header">
             <span class="articolo-tag">Interni</span>
@@ -186,24 +249,5 @@
         </footer>
 
     </div>
-
-    <script>
-        const audio = document.getElementById('audio-stanza');
-        const indicatoreAudio = document.getElementById('btn-audio');
-        let audioAvviato = false;
-
-        // La musica parte al primo click ovunque nella pagina
-        document.addEventListener('click', () => {
-            if (!audioAvviato) {
-                audio.volume = 0.5;
-                audio.play().then(() => {
-                    audioAvviato = true;
-                    indicatoreAudio.innerText = "♪ MUSICA: ON";
-                }).catch(err => {
-                    console.log("Errore riproduzione audio:", err);
-                });
-            }
-        });
-    </script>
 </body>
 </html>
