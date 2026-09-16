@@ -257,9 +257,15 @@
     <script>
         let audioCtx = null;
         let isPlaying = false;
+        let fasePoesiaAttiva = false;
+        let faseImmagineAttiva = false;
         let faseTestoRaggiunta = false;
         let clickPioggiaCount = 0;
-        let currentMode = 'fireplace'; // 'fireplace' o 'water'
+        let currentMode = 'fireplace';
+
+        // Variabili per memorizzare i timeout così da poterli cancellare in caso di clic anticipato
+        let timerPoesia1, timerPoesia2;
+        let timerImmagine1, timerImmagine2;
 
         const fraseTesto = '"Hai gli occhi di tua madre", mi è stato detto. Non sapevo se apprezzare. Ho percepito una lieve dolcezza, un\'infinita disperazione.';
 
@@ -268,28 +274,7 @@
             isPlaying = true;
             
             document.getElementById('titolo').style.opacity = '0';
-            const contPoesia = document.getElementById('container-poesia');
-            contPoesia.style.opacity = '0.9';
-
-            setTimeout(() => { document.getElementById('linea').style.width = '0px'; }, 100);
-
-            setTimeout(() => {
-                contPoesia.style.opacity = '0';
-                const contImmagine = document.getElementById('container-immagine');
-                contImmagine.style.opacity = '0.9';
-
-                setTimeout(() => { document.getElementById('linea-lenta').style.width = '0px'; }, 100);
-
-                setTimeout(() => {
-                    contImmagine.style.opacity = '0';
-                    playFinalSound();
-
-                    setTimeout(() => {
-                        document.getElementById('testo-lungo').style.opacity = '1';
-                        faseTestoRaggiunta = true; 
-                    }, 1000);
-                }, 20100);
-            }, 12100);
+            mostraPoesia();
 
             try {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -297,6 +282,58 @@
             } catch (e) {
                 console.log("Audio non avviato", e);
             }
+        }
+
+        function mostraPoesia() {
+            fasePoesiaAttiva = true;
+            faseImmagineAttiva = false;
+            
+            const contPoesia = document.getElementById('container-poesia');
+            contPoesia.style.opacity = '0.9';
+            setTimeout(() => { document.getElementById('linea').style.width = '0px'; }, 100);
+
+            // Dopo 12.1 secondi passa in automatico all'immagine
+            timerPoesia1 = setTimeout(() => {
+                passaImmagine();
+            }, 12100);
+        }
+
+        function passaImmagine() {
+            if (!fasePoesiaAttiva) return; // Evita doppi richiami
+            fasePoesiaAttiva = false;
+            
+            // Cancella i timer della poesia se l'utente ha cliccato prima della fine
+            clearTimeout(timerPoesia1);
+
+            const contPoesia = document.getElementById('container-poesia');
+            contPoesia.style.opacity = '0';
+
+            faseImmagineAttiva = true;
+            const contImmagine = document.getElementById('container-immagine');
+            contImmagine.style.opacity = '0.9';
+            setTimeout(() => { document.getElementById('linea-lenta').style.width = '0px'; }, 100);
+
+            // Dopo 20.1 secondi passa in automatico al testo lungo
+            timerImmagine1 = setTimeout(() => {
+                passaTestoLungo();
+            }, 20100);
+        }
+
+        function passaTestoLungo() {
+            if (!faseImmagineAttiva) return; // Evita doppi richiami
+            faseImmagineAttiva = false;
+
+            // Cancella i timer dell'immagine se l'utente ha cliccato prima della fine
+            clearTimeout(timerImmagine1);
+
+            const contImmagine = document.getElementById('container-immagine');
+            contImmagine.style.opacity = '0';
+            playFinalSound();
+
+            setTimeout(() => {
+                document.getElementById('testo-lungo').style.opacity = '1';
+                faseTestoRaggiunta = true; 
+            }, 1000);
         }
 
         // --- AUDIO CAMINETTO ---
@@ -363,17 +400,15 @@
         // --- AUDIO GOCCE D'ACQUA NEI VASI ---
         function startWaterDropsAudio() {
             currentMode = 'water';
-            // Spegne dolcemente il caminetto
             if (gainNodeFire) {
                 gainNodeFire.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.5);
                 setTimeout(() => { if (whiteNoiseSource) whiteNoiseSource.stop(); }, 1500);
             }
 
-            // Avvia il loop delle gocce d'acqua
             function loopDrop() {
                 if (!isPlaying) return;
                 playWaterDrop();
-                const nextTime = Math.random() * 1500 + 800; // ogni 0.8 - 2.3 secondi una goccia
+                const nextTime = Math.random() * 1500 + 800;
                 setTimeout(loopDrop, nextTime);
             }
             loopDrop();
@@ -386,7 +421,6 @@
                 const gain = audioCtx.createGain();
                 
                 osc.type = 'sine';
-                // Frequenza tipica del "bloop" di una goccia d'acqua in un vaso (da acuto a un po' più grave)
                 let startFreq = Math.random() * 400 + 800; 
                 osc.frequency.setValueAtTime(startFreq, audioCtx.currentTime);
                 osc.frequency.exponentialRampToValueAtTime(startFreq - 300, audioCtx.currentTime + 0.15);
@@ -448,10 +482,9 @@
                 setTimeout(() => { div.remove(); }, durataAnimazione * 1000);
             }
 
-            // A 6 clic si attiva la transizione al Blog e partono le gocce d'acqua
             if (clickPioggiaCount >= 6) {
-                faseTestoRaggiunta = false; // Blocca ulteriori piogge
-                startWaterDropsAudio(); // Passa all'audio delle gocce nei vasi
+                faseTestoRaggiunta = false; 
+                startWaterDropsAudio(); 
 
                 setTimeout(() => {
                     document.getElementById('testo-lungo').style.opacity = '0';
@@ -467,13 +500,16 @@
         }
 
         document.addEventListener('click', (e) => {
-            // Evita di registrare clic se si clicca direttamente sui link del blog
             if (e.target.closest('#blog-container')) return;
 
             if (!isPlaying) {
                 startFireplace();
+            } else if (fasePoesiaAttiva) {
+                passaImmagine(); // Cliccando durante la poesia, si passa subito all'immagine
+            } else if (faseImmagineAttiva) {
+                passaTestoLungo(); // Cliccando durante l'immagine, si passa subito al testo lungo
             } else if (faseTestoRaggiunta) {
-                generaPioggiaDiFrasi();
+                generaPioggiaDiFrasi(); // Cliccando durante il testo lungo, parte la pioggia
             }
         }, { once: false });
     </script>
